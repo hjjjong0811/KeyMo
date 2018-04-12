@@ -27,7 +27,12 @@ export default class KeywordMemo extends React.Component{
             this.setState({
                 selectedFile: fileData.name
             });
-        })
+        });
+        ipcRenderer.on("MR_UPDATETAGS", (_e, filesInfo) => {
+            this.setState({
+                files: filesInfo
+            });
+        });
     }
     componentWillUnmount(){
         ipcRenderer.removeAllListeners();

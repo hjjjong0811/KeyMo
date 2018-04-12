@@ -83,7 +83,17 @@ class FileManager{
             data = fileData.text.replace(/\n/g, "\r\n");
         }
         fs.writeFileSync(this.dirPath + "\\" + fileData.name, data, "utf8");
+        for(var i=0; i<this.filesInfo.length; i++){
+            if(this.filesInfo[i].name === fileData.name){
+                this.filesInfo[i] = {
+                    name : fileData.name,
+                    tags : this.getTags(fileData.name)
+                }
+                break;
+            }
+        }
         console.log("save complete");
+        return this.filesInfo;
     }
 
     showOpenDirDialog(){

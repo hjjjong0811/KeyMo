@@ -10,6 +10,7 @@ export default class ViewPanel extends React.Component{
         }
         this.onChangeText = this.onChangeText.bind(this);
         this.onSaveClick = this.onSaveClick.bind(this);
+        this.onKeyDown = this.onKeyDown.bind(this);
     }
     componentDidMount(){
         ipcRenderer.on("MR_OPENFILE", (_e, fileData) => {
@@ -29,6 +30,17 @@ export default class ViewPanel extends React.Component{
     onChangeText(e){
         this.setState({text: e.target.value});
     }
+    onKeyDown(e){
+        if(e.keyCode === 9){
+            e.preventDefault();
+            var start = e.target.selectionStart;
+            var end = e.target.selectionEnd;
+            var text = this.state.text;
+            this.setState(
+                {text: text.substring(0, start)+"\t"+text.substring(end)},
+                () => {this.refs.input.selectionStart = this.refs.input.selectionEnd = start + 1});
+        }
+    }
     onSaveClick(e){
         e.preventDefault();
         if(this.props.dirPath === ""){
@@ -41,18 +53,17 @@ export default class ViewPanel extends React.Component{
                 text:this.state.text
             });
         }
-        //this.props.fileName
-        //this.state.text
     }
 
     render(){
         return(
             <div className= {style.viewPanel}>
                 <textarea
-                        id="memo"
+                        ref="memo"
                         className={style.memo}
                         value={this.state.text}
                         onChange={this.onChangeText}
+                        onKeyDown={this.onKeyDown}
                     />
                 <button type="button" className={style.btnOK} onClick={this.onSaveClick}>SAVE</button>
             </div>

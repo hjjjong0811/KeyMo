@@ -1,8 +1,20 @@
 .FileListItem_selected{
-    background-color: skyblue;
-    border: gray;
+    background-color: whitesmoke;
+    border-left: 5px solid mediumaquamarine;
+    border-bottom: 1px solid gray;
+    padding: 2px;
 }
 
 .FileListItem{
-    border: none;
+    border-bottom: 1px solid gray;
+    padding: 2px;
+}
+
+.FileName{
+    font-size: 14px;
+    background-color: inherit;
+}
+.FileTags{
+    font-size: 11px;
+    background-color: inherit;
 }
