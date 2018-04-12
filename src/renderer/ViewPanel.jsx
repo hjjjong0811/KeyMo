@@ -17,10 +17,7 @@ export default class ViewPanel extends React.Component{
             this.setState({text: fileData.text});
         });
         ipcRenderer.on("MR_SAVEFILE", (_e) => {
-            ipcRenderer.send("RM_SAVEFILE", {
-                name:this.props.fileName,
-                text:this.state.text
-            });
+            this.onSaveClick(null);
         });
     }
     componentWillUnmount(){
@@ -42,7 +39,7 @@ export default class ViewPanel extends React.Component{
         }
     }
     onSaveClick(e){
-        e.preventDefault();
+        if(e != null)e.preventDefault();
         if(this.props.dirPath === ""){
             console.log("Directory가 지정되지 않았습니다.");
         }else if(this.props.fileName === ""){
@@ -65,7 +62,11 @@ export default class ViewPanel extends React.Component{
                         onChange={this.onChangeText}
                         onKeyDown={this.onKeyDown}
                     />
-                <button type="button" className={style.btnOK} onClick={this.onSaveClick}>SAVE</button>
+                <button type="button"
+                        className={style.btnOK}
+                        onClick={this.onSaveClick}>
+                    SAVE
+                </button>
             </div>
         );
     }
