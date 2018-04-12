@@ -1,0 +1,13 @@
+﻿MR_OPENDIR / (dirInfo : dirPath, filesInfo : name,tags)
+
+RM_OPENFILE / (fileName)
+	MR_OPENFILE / (fileData: name,text)	//e->text
+
+MR_SAVEFILE / 
+RM_SAVEFILE / (fileData: name, text)
+
+
+
+
+==================
+RM_RENAMEFILE / (nameCur, nameNew)
