@@ -18,6 +18,10 @@ function saveFile(fileData){
     const filesInfo = fileManager.saveFile(fileData);
     win.webContents.send("MR_UPDATETAGS", filesInfo);
 }
+function createFile(fileName){
+    const filesInfo = fileManager.createFile(fileName);
+    win.webContents.send("MR_UPDATETAGS", filesInfo);
+}
 
 function createWindow(){
     win = new BrowserWindow({width: 800, height: 600});
@@ -87,6 +91,7 @@ app.on("ready", () =>{
     fileManager = createFileManager();
     ipcMain.on("RM_OPENFILE", (_e, fileName) => openFile(fileName));
     ipcMain.on("RM_SAVEFILE", (_e, fileData) => saveFile(fileData));
+    ipcMain.on("RM_NEWFILE", (_e, fileName) => createFile(fileName));
 });
 
 app.on("window-all-closed", () =>{

@@ -95,6 +95,19 @@ class FileManager{
         console.log("save complete");
         return this.filesInfo;
     }
+    createFile(fileName){
+        fs.writeFileSync(this.dirPath + "\\" + fileName, '',);
+        for(var i=0; i<this.filesInfo.length; i++){
+            if(fileName < this.filesInfo[i].name){
+                this.filesInfo.splice(i, 0, {name: fileName, tags: new Array()});
+                console.log("createFile(): sandwich");
+                return this.filesInfo;
+            }
+        }
+        this.filesInfo.push({name: fileName, tags: new Array()});
+        console.log("createFile(): end");
+        return this.filesInfo;
+    }
 
     showOpenDirDialog(){
         return new Promise( (resolve, reject) => {
