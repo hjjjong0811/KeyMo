@@ -38,7 +38,7 @@ export default class ViewPanel extends React.Component{
             var text = this.state.text;
             this.setState(
                 {text: text.substring(0, start)+"\t"+text.substring(end)},
-                () => {this.refs.input.selectionStart = this.refs.input.selectionEnd = start + 1});
+                () => {this.refs.memo.selectionStart = this.refs.memo.selectionEnd = start + 1});
         }
     }
     onSaveClick(e){
