@@ -3,6 +3,7 @@ import style from "./css/NavPanel.css";
 import ListItem from "./ListItem";
 import {ipcRenderer} from "electron";
 import FileList from "./FileList";
+import {Button} from "react-bootstrap";
 
 export default class NavPanel extends React.Component{
     constructor(props){
@@ -27,6 +28,9 @@ export default class NavPanel extends React.Component{
     OnSearchClick(e){
         e.preventDefault();
         console.log("OnSearchClick : "+this.state.searchText);
+    }
+    OnTagClick(tag){
+        this.setState({searchText: this.state.searchText + tag});
     }
 
     // * Tab Click
@@ -100,7 +104,9 @@ export default class NavPanel extends React.Component{
                         <FileList files={this.props.files} selectedFile={this.props.selectedFile}/>
                     </div>
                     <div class={this.state.activeTab === 2?style.tab_Active:style.tab_Disable}>
-                        taglist
+                        {this.props.allTags.map(tag=>
+                            <Button onClick={this.OnTagClick.bind(this, tag)}>{tag}</Button>
+                            )}
                     </div>
                 </div>
             </div>

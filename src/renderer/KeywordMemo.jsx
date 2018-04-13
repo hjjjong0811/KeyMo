@@ -11,8 +11,9 @@ export default class KeywordMemo extends React.Component{
             dirPath: "",
             selectedFile: "",
             files: [],
-            Tags: []
+            allTags: []
         };
+        this.getTagList = this.getTagList.bind(this);
     }
     componentDidMount(){
         ipcRenderer.on("MR_OPENDIR", (_e, dirInfo) => {
@@ -22,6 +23,7 @@ export default class KeywordMemo extends React.Component{
                 selectedFile: "",
                 files: dirInfo.filesInfo
             });
+            this.getTagList();
         });
         ipcRenderer.on("MR_OPENFILE", (_e, fileData) => {
             document.title = "KeyMo - " + this.state.dirPath + " : " + fileData.name;
@@ -33,13 +35,22 @@ export default class KeywordMemo extends React.Component{
             this.setState({
                 files: filesInfo
             });
+            this.getTagList();
         });
     }
     componentWillUnmount(){
         ipcRenderer.removeAllListeners();
     }
 
-    getTagList(files){
+    getTagList(){
+        var tags = new Array();
+        for(var i=0; i<this.state.files.length; i++){
+            tags = tags.concat(this.state.files[i].tags).reduce(function(uniques, item){
+                if(uniques.indexOf(item) == -1) uniques.push(item);
+                return uniques;
+            }, []);
+        }
+        this.setState({allTags: tags});
     }
 
     render(){
@@ -50,6 +61,7 @@ export default class KeywordMemo extends React.Component{
                 dirPath = {this.state.dirPath}
                 selectedFile = {this.state.selectedFile}
                 files = {this.state.files}
+                allTags = {this.state.allTags}
                 id="listPanel"/>
             <ViewPanel
                 className={style.viewPanel}

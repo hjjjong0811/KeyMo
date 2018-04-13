@@ -3,9 +3,9 @@ import {ListGroupItem} from "react-bootstrap";
 
 function toStringTag(tags){
   if(tags.length > 10){
-    return tags.slice(0, 10).join('; ') + "...";
+    return tags.slice(0, 10).join(' ') + "...";
   }else{
-    return tags.join('; ');
+    return tags.join(' ');
   }
 }
 

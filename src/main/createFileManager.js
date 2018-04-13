@@ -25,7 +25,7 @@ class FileManager{
         while(beginPos > -1){
             var endPos = data.indexOf(";", beginPos + 1);
             if(endPos <= -1) break;
-            tags.push(data.substr(beginPos + 1, endPos - beginPos - 1));
+            tags.push(data.substr(beginPos, endPos - beginPos + 1));
             beginPos = data.indexOf("#", endPos + 1);
         }
         return tags;
