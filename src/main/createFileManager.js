@@ -83,7 +83,30 @@ class FileManager{
             data = fileData.text.replace(/\n/g, "\r\n");
         }
         fs.writeFileSync(this.dirPath + "\\" + fileData.name, data, "utf8");
+        for(var i=0; i<this.filesInfo.length; i++){
+            if(this.filesInfo[i].name === fileData.name){
+                this.filesInfo[i] = {
+                    name : fileData.name,
+                    tags : this.getTags(fileData.name)
+                }
+                break;
+            }
+        }
         console.log("save complete");
+        return this.filesInfo;
+    }
+    createFile(fileName){
+        fs.writeFileSync(this.dirPath + "\\" + fileName, '',);
+        for(var i=0; i<this.filesInfo.length; i++){
+            if(fileName < this.filesInfo[i].name){
+                this.filesInfo.splice(i, 0, {name: fileName, tags: new Array()});
+                console.log("createFile(): sandwich");
+                return this.filesInfo;
+            }
+        }
+        this.filesInfo.push({name: fileName, tags: new Array()});
+        console.log("createFile(): end");
+        return this.filesInfo;
     }
 
     showOpenDirDialog(){

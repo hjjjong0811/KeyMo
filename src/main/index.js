@@ -14,8 +14,13 @@ function openFile(fileName){
     const fileData = fileManager.openFile(fileName);
     win.webContents.send("MR_OPENFILE", fileData);
 }
-function saveFile(){
-    win.webContents.send("MR_SAVEFILE");
+function saveFile(fileData){
+    const filesInfo = fileManager.saveFile(fileData);
+    win.webContents.send("MR_UPDATETAGS", filesInfo);
+}
+function createFile(fileName){
+    const filesInfo = fileManager.createFile(fileName);
+    win.webContents.send("MR_UPDATETAGS", filesInfo);
 }
 
 function createWindow(){
@@ -32,7 +37,7 @@ function setAppMenu(){
             label: "File",
             submenu: [
                 {label: "Open Directory", accelerator: "CmdOrCtrl+O", click: ()=> openDirectory()},
-                {label: "Save", accelerator: "CmdOrCtrl+S", click: ()=> saveFile()},
+                {label: "Save", accelerator: "CmdOrCtrl+S", click: ()=> win.webContents.send("MR_SAVEFILE")},
                 {label: "Exit", role: "close"}
             ]
         },
@@ -40,9 +45,6 @@ function setAppMenu(){
         {
             label: "Edit",
             submenu: [
-                {label: "Undo", accelerator: "CmdOrCtrl+Z", role: "undo"},
-                {label: "Redo", accelerator: "CmdOrCtrl+Y", role: "redo"},
-                {type: "separator"},
                 {label: "Copy", accelerator: "CmdOrCtrl+C", role: "copy"},
                 {label: "Paste", accelerator: "CmdOrCtrl+V", role: "paste"},
                 {label: "Cut", accelerator: "CmdOrCtrl+X", role: "cut"},
@@ -58,7 +60,7 @@ function setAppMenu(){
                 {role: "resetzoom"},
                 {type: "separator"},
                 {role: "togglefullscreen"},
-                {label: "Toggle DevTools", accelerator: "Ctrl+Shift+I",
+                {label: "Toggle DevTools", accelerator: "F12",
                     click: ()=> BrowserWindow.getFocusedWindow().toggleDevTools()}
             ]
         },
@@ -88,7 +90,8 @@ app.on("ready", () =>{
     setAppMenu();
     fileManager = createFileManager();
     ipcMain.on("RM_OPENFILE", (_e, fileName) => openFile(fileName));
-    ipcMain.on("RM_SAVEFILE", (_e, fileData) => fileManager.saveFile(fileData));
+    ipcMain.on("RM_SAVEFILE", (_e, fileData) => saveFile(fileData));
+    ipcMain.on("RM_NEWFILE", (_e, fileName) => createFile(fileName));
 });
 
 app.on("window-all-closed", () =>{
