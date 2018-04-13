@@ -10,7 +10,8 @@ export default class KeywordMemo extends React.Component{
         this.state = {
             dirPath: "",
             selectedFile: "",
-            files: []
+            files: [],
+            Tags: []
         };
     }
     componentDidMount(){
@@ -36,6 +37,9 @@ export default class KeywordMemo extends React.Component{
     }
     componentWillUnmount(){
         ipcRenderer.removeAllListeners();
+    }
+
+    getTagList(files){
     }
 
     render(){

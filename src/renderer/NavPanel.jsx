@@ -1,5 +1,6 @@
 import React from "react";
-import {Popover, Overlay, Button, FormControl, Form} from "react-bootstrap";
+import {Popover, Overlay, Button, FormControl, Form,
+            Tabs, Tab, ListGroup} from "react-bootstrap";
 import style from "./css/NavPanel.css";
 import ListItem from "./ListItem";
 import {ipcRenderer} from "electron";
@@ -8,15 +9,23 @@ export default class NavPanel extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            isOpenCreate: false,
+            //Data
             newFileName: "",
-            searchText: ""
+            searchText: "",
+
+            //UI
+            isOpenCreate: false,
+            activeTab: 1
         };
+
         this.OnSearchChange = this.OnSearchChange.bind(this);
         this.OnSearchClick = this.OnSearchClick.bind(this);
+
+        this.CreateWin_Toggle = this.CreateWin_Toggle.bind(this);
         this.OnFileNameChange = this.OnFileNameChange.bind(this);
         this.OnCreateWin_OKClick = this.OnCreateWin_OKClick.bind(this);
-        this.CreateWin_Toggle = this.CreateWin_Toggle.bind(this);
+
+        this.onClickTab = this.onClickTab.bind(this);
     }
 
 
@@ -28,6 +37,7 @@ export default class NavPanel extends React.Component{
         e.preventDefault();
         console.log("OnSearchClick : "+this.state.searchText);
     }
+    // * CreateFile
     CreateWin_Toggle(e){
         this.setState({
             isOpenCreate: !this.state.isOpenCreate,
@@ -48,54 +58,64 @@ export default class NavPanel extends React.Component{
         });
     }
 
-    // * File Select Or Create
+    // * File Select
     onClickFile(fileName){
         ipcRenderer.send("RM_OPENFILE", fileName);
     }
 
+    // * Tab Click
+    onClickTab(key){
+        this.setState({activeTab: key});
+    }
     
 
     // * Render
     renderFileList(){
-        if(this.props.dirPath === ""){
-            return;
-        }
+        return(
+            <ListGroup>
+                {this.props.files.map(f=>
+                    <ListItem
+                        txtInfo={f}
+                        selected={f.name === this.props.selectedFile}
+                        onClickItem={this.onClickFile.bind(this, f.name)}/>
+                    )}
+            </ListGroup>
+        );
+    }
+    renderTabList(){
         return(
             <div>
-                <Button onClick={this.CreateWin_Toggle}>Create TextFile</Button>
-                <Overlay
-                    show={this.state.isOpenCreate}
-                    target={this.state.target}
-                    placement="bottom">
-                        <Popover title='Create TextFile'>
-                            <Form onSubmit={this.OnCreateWin_OKClick}>
-                                <FormControl
-                                    type="text"
-                                    placeholder="file name"
-                                    value={this.state.newFileName}
-                                    onChange={this.OnFileNameChange}/>
-                                <Button type="submit" bsStyle="primary">
-                                    Create
-                                </Button>
-                            </Form>
-                        </Popover>
-                </Overlay>
-                {this.props.files.map(f=><ListItem txtInfo={f} selected={f.name === this.props.selectedFile}
-                            onClick={this.onClickFile.bind(this, f.name)}/>)}
+                taglist
             </div>
-        )
+        );
+    }
+    renderCreatePopup(){
+        return(
+            <Popover title='Create TextFile'>
+                <Form onSubmit={this.OnCreateWin_OKClick}>
+                    <FormControl
+                        type="text"
+                        placeholder="file name"
+                        value={this.state.newFileName}
+                        onChange={this.OnFileNameChange}/>
+                    <Button type="submit" bsStyle="primary">
+                        Create
+                    </Button>
+                </Form>
+            </Popover>
+        );
     }
 
     render(){
         return(
-            <div className={style.navPanel}>
-                <div className={style.dirPanel}>
+            <div className={style.verticalFlex}>
+                <div>
                     <button className={style.dirBtn}/>
                     <strong>{this.props.dirPath}</strong>
                 </div>
 
                 {/* SearchPanel */}
-                <div className={style.searchPanel + " searchPanel"}>
+                <div>
                     <form onSubmit={this.OnSearchClick}>
                         <input type="text"
                             value={this.state.searchText}
@@ -107,8 +127,27 @@ export default class NavPanel extends React.Component{
                 <hr width="100%"/>
 
                 {/* FileList */}
-                <div className={style.listPanel}>
-                    {this.renderFileList()}
+                <div className={style.flexRemain}>
+                    <Tabs
+                        activeKey={this.state.activeTab}
+                        onSelect={this.onClickTab}
+                    >
+                        <Tab eventKey={1} title="FileList">
+                            <Button onClick={this.CreateWin_Toggle}>Create TextFile</Button>
+                            <Overlay
+                                show={this.state.isOpenCreate}
+                                target={this.state.target}
+                                placement="right">
+                                    {this.renderCreatePopup()}
+                            </Overlay>
+                            <div className={style.scrollBox}>
+                                {this.renderFileList()}
+                            </div>
+                        </Tab>
+                        <Tab eventKey={2} title="Tags">
+                            {this.renderTabList()}
+                        </Tab>
+                    </Tabs>
                 </div>
             </div>
         );
