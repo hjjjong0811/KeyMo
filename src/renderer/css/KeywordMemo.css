@@ -7,19 +7,3 @@
     overflow: hidden;
 }
 
-.listPanel{
-    width: 100%;
-    height: 100%;
-}
-
-.resizingHr{
-    left: 50%;
-    width: 10px;
-    cursor: w-resize;
-    color: black;
-}
-
-.viewPanel{
-    width: 100%;
-    height: 100%;
-}
