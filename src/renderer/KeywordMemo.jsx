@@ -53,21 +53,35 @@ export default class KeywordMemo extends React.Component{
         this.setState({allTags: tags});
     }
 
+    renderPage(){
+        if(this.state.dirPath === ""){
+            return(
+                <div>
+                    Please Open Directory
+                </div>
+            );
+        }else{
+            return(
+                <div className={style.keywordMemo}>
+                    <NavPanel
+                        dirPath = {this.state.dirPath}
+                        selectedFile = {this.state.selectedFile}
+                        files = {this.state.files}
+                        allTags = {this.state.allTags}
+                        id="listPanel"/>
+                    <ViewPanel
+                        dirPath = {this.state.dirPath}
+                        fileName = {this.state.selectedFile}
+                        id="viewPanel"/>
+                </div>
+            );
+        }
+    }
+
     render(){
         return(
             <div className={style.keywordMemo}>
-            <NavPanel
-                className={style.listPanel}
-                dirPath = {this.state.dirPath}
-                selectedFile = {this.state.selectedFile}
-                files = {this.state.files}
-                allTags = {this.state.allTags}
-                id="listPanel"/>
-            <ViewPanel
-                className={style.viewPanel}
-                dirPath = {this.state.dirPath}
-                fileName = {this.state.selectedFile}
-                id="viewPanel"/>
+                {this.renderPage()}
             </div>
         );
     }

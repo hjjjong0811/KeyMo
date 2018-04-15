@@ -3,7 +3,7 @@ import style from "./css/NavPanel.css";
 import ListItem from "./ListItem";
 import {ipcRenderer} from "electron";
 import FileList from "./FileList";
-import {Button} from "react-bootstrap";
+import {Button,FormControl, Form} from "react-bootstrap";
 
 export default class NavPanel extends React.Component{
     constructor(props){
@@ -16,10 +16,20 @@ export default class NavPanel extends React.Component{
             activeTab: 1
         };
 
+        this.OnClickOpenDir = this.OnClickOpenDir.bind(this);
+        this.OnClickViewAllFile = this.OnClickViewAllFile.bind(this);
+
         this.OnSearchChange = this.OnSearchChange.bind(this);
         this.OnSearchClick = this.OnSearchClick.bind(this);
     }
 
+    //Nav Button
+    OnClickOpenDir(){
+        ipcRenderer.send("RM_OPENDIR");
+    }
+    OnClickViewAllFile(){
+        ipcRenderer.send("RM_SEARCHFILE", "");
+    }
 
     // * Search
     OnSearchChange(e){
@@ -40,13 +50,6 @@ export default class NavPanel extends React.Component{
     
 
     // * Render
-    renderTabList(){
-        return(
-            <div>
-                taglist
-            </div>
-        );
-    }
     renderCreatePopup(){
         return(
             <Popover title='Create TextFile'>
@@ -67,22 +70,21 @@ export default class NavPanel extends React.Component{
     render(){
         return(
             <div className={style.verticalFlex}>
-                <div>
-                    <button className={style.dirBtn}/>
-                    <strong>{this.props.dirPath}</strong>
+                <div className={style.searchPanel}>
+                    <button className={style.dirBtn} onClick={this.OnClickOpenDir}>OPENDIR</button>
+                    <button onClick={this.OnClickViewAllFile}>VIEWALLFILE</button>
                 </div>
 
                 {/* SearchPanel */}
-                <div>
-                    <form onSubmit={this.OnSearchClick}>
-                        <input type="text"
-                            value={this.state.searchText}
-                            className={style.searchText}
-                            onChange={this.OnSearchChange}/>
-                        <button className={style.searchBtn}/>
-                    </form>
-                </div>
-                <hr width="100%"/>
+                <Form onSubmit={this.OnSearchClick} className={style.searchPanel}>
+                    <FormControl
+                        type="text"
+                        placeholder="Search Tag"
+                        value={this.state.searchText}
+                        className={style.searchText}
+                        onChange={this.OnSearchChange}/>
+                    <Button className={style.searchButton} type="submit" bsStyle="primary"/>
+                </Form>
 
                 {/* File Or Tag List */}
                 <div className={style.flexRemain}>

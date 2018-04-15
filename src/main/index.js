@@ -93,6 +93,7 @@ app.on("ready", () =>{
     createWindow();
     setAppMenu();
     fileManager = createFileManager();
+    ipcMain.on("RM_OPENDIR", (_e) => openDirectory());
     ipcMain.on("RM_OPENFILE", (_e, fileName) => openFile(fileName));
     ipcMain.on("RM_SAVEFILE", (_e, fileData) => saveFile(fileData));
     ipcMain.on("RM_NEWFILE", (_e, fileName) => createFile(fileName));
