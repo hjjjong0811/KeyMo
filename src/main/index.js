@@ -22,6 +22,10 @@ function createFile(fileName){
     const filesInfo = fileManager.createFile(fileName);
     win.webContents.send("MR_UPDATETAGS", filesInfo);
 }
+function searchFile(searchText){
+    const result = fileManager.searchFile(searchText);
+    win.webContents.send("MR_UPDATETAGS", result);
+}
 
 function createWindow(){
     win = new BrowserWindow({width: 800, height: 600});
@@ -92,6 +96,7 @@ app.on("ready", () =>{
     ipcMain.on("RM_OPENFILE", (_e, fileName) => openFile(fileName));
     ipcMain.on("RM_SAVEFILE", (_e, fileData) => saveFile(fileData));
     ipcMain.on("RM_NEWFILE", (_e, fileName) => createFile(fileName));
+    ipcMain.on("RM_SEARCHFILE", (_e, searchText) => searchFile(searchText));
 });
 
 app.on("window-all-closed", () =>{

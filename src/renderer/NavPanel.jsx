@@ -27,7 +27,7 @@ export default class NavPanel extends React.Component{
     }
     OnSearchClick(e){
         e.preventDefault();
-        console.log("OnSearchClick : "+this.state.searchText);
+        ipcRenderer.send("RM_SEARCHFILE", this.state.searchText);
     }
     OnTagClick(tag){
         this.setState({searchText: this.state.searchText + tag});

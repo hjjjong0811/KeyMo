@@ -7,18 +7,11 @@ class FileManager{
         this.dirPath = "";
         this.filesInfo;
         this.fileName = "";
+        this.searchFiles;
     }
 
-    getTags(fileName){ //Get Tags using parse Text of file
+    getTags(data){ //Get Tags using parse Text
         var tags = new Array();
-
-        //Open File
-        try{
-            var data = fs.readFileSync(this.dirPath + "\\" + fileName, "utf8");
-        }catch(err){
-            console.log(err);
-            return;
-        }
         
         //find Tag in File
         var beginPos = data.indexOf("#");
@@ -47,9 +40,16 @@ class FileManager{
         var i = 0;
         fs.readdirSync(this.dirPath).forEach(file => {
             if(path.extname(file) === ".txt"){
+                //Open File
+                try{
+                    var data = fs.readFileSync(this.dirPath + "\\" + file, "utf8");
+                }catch(err){
+                    console.log("fileManager : openDir() : "+err);
+                    return;
+                }
                 filesInfo[i] = {
                     name : file,
-                    tags : this.getTags(file),
+                    tags : this.getTags(data),
                 }
             }
             i++;
@@ -85,28 +85,53 @@ class FileManager{
         fs.writeFileSync(this.dirPath + "\\" + fileData.name, data, "utf8");
         for(var i=0; i<this.filesInfo.length; i++){
             if(this.filesInfo[i].name === fileData.name){
-                this.filesInfo[i] = {
-                    name : fileData.name,
-                    tags : this.getTags(fileData.name)
+                this.searchFiles[this.searchFiles.indexOf(this.filesInfo[i])] =
+                    this.filesInfo[i] = {
+                        name : fileData.name,
+                        tags : this.getTags(data)
                 }
                 break;
             }
         }
         console.log("save complete");
-        return this.filesInfo;
+        return this.searchFiles;
     }
     createFile(fileName){
         fs.writeFileSync(this.dirPath + "\\" + fileName, '',);
         for(var i=0; i<this.filesInfo.length; i++){
             if(fileName < this.filesInfo[i].name){
                 this.filesInfo.splice(i, 0, {name: fileName, tags: new Array()});
-                console.log("createFile(): sandwich");
                 return this.filesInfo;
             }
         }
         this.filesInfo.push({name: fileName, tags: new Array()});
-        console.log("createFile(): end");
+        this.searchFiles = this.filesInfo;
         return this.filesInfo;
+    }
+    searchFile(searchText){
+        if(searchText === ""){
+            this.searchFiles = this.filesInfo;
+            return this.filesInfo;
+        }
+        var searchTags = this.getTags(searchText);
+
+        var filesResult = new Array();
+
+        for(var i=0; i<this.filesInfo.length; i++){
+            //Contain All searchTag?
+            var bTagPlag = 0;
+            for(var j=0; j<searchTags.length; j++){
+                if(this.filesInfo[i].tags.indexOf(searchTags[j]) != -1){
+                    bTagPlag++;
+                    continue;
+                }
+            }
+            if(bTagPlag < searchTags.length) continue;
+
+            filesResult.push(this.filesInfo[i]);
+        }
+        this.searchFiles = filesResult;
+        return this.searchFiles;
     }
 
     showOpenDirDialog(){

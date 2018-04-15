@@ -10,6 +10,7 @@ MR_UPDATETAGS / (filesInfo: name, tags)
 
 RM_NEWFILE / (fileName)
 
+RM_SEARCHFILE / (searchText)
 
 ==================
 RM_RENAMEFILE / (nameCur, nameNew)
