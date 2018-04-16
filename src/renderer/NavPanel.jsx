@@ -28,6 +28,7 @@ export default class NavPanel extends React.Component{
         ipcRenderer.send("RM_OPENDIR");
     }
     OnClickViewAllFile(){
+        this.setState({searchText: ""});
         ipcRenderer.send("RM_SEARCHFILE", "");
     }
 

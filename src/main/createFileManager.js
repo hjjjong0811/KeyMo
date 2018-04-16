@@ -106,7 +106,10 @@ class FileManager{
         return this.searchFiles;
     }
     createFile(fileName){
-        //규칙검사필요 return -1
+        var regex = /^[^\/\\:*?"<>|;,]{1,200}(\.txt)$/;
+        if(!regex.test(fileName)) {
+            return -1;
+        }
         if(fs.existsSync(this.dirPath + "\\" + fileName)){
             return 0;
         }

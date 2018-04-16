@@ -1,5 +1,6 @@
 import React from "react";
-import {Popover, Overlay, Button, FormControl, InputGroup, InputGroupButton, ListGroup} from "react-bootstrap";
+import {Popover, Overlay, Button, FormControl, Tooltip,
+         InputGroup, InputGroupButton, ListGroup} from "react-bootstrap";
 import ListItem from "./ListItem";
 import {ipcRenderer} from "electron";
 import style from "./css/NavPanel.css";
@@ -11,7 +12,9 @@ export default class FileList extends React.Component{
             //Data
             newFileName: "",
             //UI
-            isOpenCreate: false
+            isOpenCreate: false,
+            isOpenTooltip_create: false,
+            createTooltip: ""
         };
 
         this.CreateWin_Toggle = this.CreateWin_Toggle.bind(this);
@@ -22,12 +25,14 @@ export default class FileList extends React.Component{
     // * CreateFile
     CreateWin_Toggle(e){
         this.setState({
+            newFileName: "",
             isOpenCreate: !this.state.isOpenCreate,
+            isOpenTooltip_create: false,
             target: e.target
         });
     }
     OnFileNameChange(e){
-        this.setState({newFileName: e.target.value});
+        this.setState({newFileName: e.target.value, target_form: e.target, isOpenTooltip_create:false});
     }
     OnCreateWin_OKClick(e){
         e.preventDefault();
@@ -40,9 +45,21 @@ export default class FileList extends React.Component{
                 });
 
             }else if(result==0){
-                console.log("이미 존재");
+                this.inputFile.focus();
+                this.setState({
+                    isOpenTooltip_create: true,
+                    createTooltip: "이미 존재하는 파일명입니다"
+                });
+                setTimeout(function(){
+                    this.setState({isOpenTooltip_create: false})}.bind(this), 2000);
             }else if(result==-1){
-                console.log("파일명규칙");
+                this.inputFile.focus();
+                this.setState({
+                    isOpenTooltip_create: true,
+                    createTooltip: "파일 이름에는 \\ / : * ? \" < > | 의 문자를 사용할 수 없습니다"
+                });
+                setTimeout(function(){
+                    this.setState({isOpenTooltip_create: false})}.bind(this), 2000);
             }
         });
     }
@@ -71,6 +88,7 @@ export default class FileList extends React.Component{
                 <form onSubmit={this.OnCreateWin_OKClick}>
                     <InputGroup>
                         <FormControl
+                            inputRef={ref => {this.inputFile = ref;}}
                             type="text"
                             placeholder="file name"
                             value={this.state.newFileName}
@@ -82,10 +100,17 @@ export default class FileList extends React.Component{
                         </InputGroup.Button>
                     </InputGroup>
                 </form>
+
+                <Overlay
+                    container= {this}
+                    target= {this.state.target_form}
+                    show={this.state.isOpenTooltip_create}
+                    placement="top">
+                    <Tooltip id="fileNametooltip">{this.state.createTooltip}</Tooltip>
+                </Overlay>
             </Popover>
         );
     }
-
     render(){
         return(
             <div className={style.verticalFlex}>
