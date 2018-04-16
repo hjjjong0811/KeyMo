@@ -78,14 +78,18 @@ export default class FileList extends React.Component{
     render(){
         return(
             <div className={style.verticalFlex}>
-                <Button onClick={this.CreateWin_Toggle}>Create TextFile</Button>
+                {this.renderFileList()}
+                <Button
+                    className={style.createButton}
+                    onClick={this.CreateWin_Toggle}>
+                        Create TextFile
+                </Button>
                 <Overlay
                     show={this.state.isOpenCreate}
                     target={this.state.target}
-                    placement="right">
+                    placement="top">
                         {this.renderCreatePopup()}
                 </Overlay>
-                    {this.renderFileList()}
             </div>
         );
     }

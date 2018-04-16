@@ -1,6 +1,7 @@
 import React from "react";
 import style from "./css/ViewPanel.css";
 import {ipcRenderer} from "electron";
+import {Button} from "react-bootstrap";
 
 export default class ViewPanel extends React.Component{
     constructor(props){
@@ -62,11 +63,11 @@ export default class ViewPanel extends React.Component{
                         onChange={this.onChangeText}
                         onKeyDown={this.onKeyDown}
                     />
-                <button type="button"
+                <Button bsStyle="primary"
                         className={style.btnOK}
                         onClick={this.onSaveClick}>
                     SAVE
-                </button>
+                </Button>
             </div>
         );
     }

@@ -32,6 +32,9 @@ class FileManager{
                 properties: ["openDirectory"],
             }
         );
+        if(dir == null || dir.length < 1){
+            return null;
+        }
         this.dirPath = dir[0];
         this.fileName = "";
         
@@ -56,6 +59,7 @@ class FileManager{
             }
         );
         this.filesInfo = filesInfo;
+        this.searchFiles = this.filesInfo;
 
         return {
             dirPath : this.dirPath,

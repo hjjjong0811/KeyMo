@@ -30,8 +30,6 @@
     flex: 1;
 }
 .btnOK{
-    width: 100%;
+    margin: 5px;
     height: 30px;
-    margin-bottom: 10px;
-    margin-top: 5px;
 }

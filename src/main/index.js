@@ -8,7 +8,7 @@ let fileManager;
 
 function openDirectory(){
     const dirInfo = fileManager.openDir();
-    win.webContents.send("MR_OPENDIR", dirInfo);
+    if(dirInfo != null) win.webContents.send("MR_OPENDIR", dirInfo);
 }
 function openFile(fileName){
     const fileData = fileManager.openFile(fileName);

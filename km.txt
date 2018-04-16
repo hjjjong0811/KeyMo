@@ -1,4 +1,5 @@
-﻿MR_OPENDIR / (dirInfo : dirPath, filesInfo : name,tags)
+﻿RM_OPENDIR
+MR_OPENDIR / (dirInfo : dirPath, filesInfo : name,tags)
 
 RM_OPENFILE / (fileName)
 	MR_OPENFILE / (fileData: name,text)
