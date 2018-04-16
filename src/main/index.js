@@ -17,6 +17,7 @@ function openFile(fileName){
 function saveFile(fileData){
     const filesInfo = fileManager.saveFile(fileData);
     win.webContents.send("MR_UPDATETAGS", filesInfo);
+    win.webContents.send("MR_SAVECOMPLETE");
 }
 function createFile(fileName){
     const filesInfo = fileManager.createFile(fileName);

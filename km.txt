@@ -6,6 +6,7 @@ RM_OPENFILE / (fileName)
 
 MR_SAVEFILE / 
 RM_SAVEFILE / (fileData: name, text)
+MR_SAVECOMPLETE
 
 MR_UPDATETAGS / (filesInfo: name, tags)
 
