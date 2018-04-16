@@ -63,12 +63,14 @@ export default class KeywordMemo extends React.Component{
         }else{
             return(
                 <div className={style.keywordMemo}>
-                    <NavPanel
-                        dirPath = {this.state.dirPath}
-                        selectedFile = {this.state.selectedFile}
-                        files = {this.state.files}
-                        allTags = {this.state.allTags}
-                        id="listPanel"/>
+                    <div className={style.navPanel}>
+                        <NavPanel
+                            dirPath = {this.state.dirPath}
+                            selectedFile = {this.state.selectedFile}
+                            files = {this.state.files}
+                            allTags = {this.state.allTags}
+                            id="listPanel"/>
+                    </div>
                     <ViewPanel
                         dirPath = {this.state.dirPath}
                         fileName = {this.state.selectedFile}

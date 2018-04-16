@@ -18,6 +18,11 @@ class FileManager{
         while(beginPos > -1){
             var endPos = data.indexOf(";", beginPos + 1);
             if(endPos <= -1) break;
+            var bp = beginPos;
+            do{
+                beginPos = bp;
+                bp = data.indexOf("#", beginPos + 1);
+            }while(bp != -1 && bp < endPos);
             tags.push(data.substr(beginPos, endPos - beginPos + 1));
             beginPos = data.indexOf("#", endPos + 1);
         }
@@ -101,7 +106,11 @@ class FileManager{
         return this.searchFiles;
     }
     createFile(fileName){
-        fs.writeFileSync(this.dirPath + "\\" + fileName, '',);
+        //규칙검사필요 return -1
+        if(fs.existsSync(this.dirPath + "\\" + fileName)){
+            return 0;
+        }
+        fs.writeFileSync(this.dirPath + "\\" + fileName, "", "utf8");
         for(var i=0; i<this.filesInfo.length; i++){
             if(fileName < this.filesInfo[i].name){
                 this.filesInfo.splice(i, 0, {name: fileName, tags: new Array()});

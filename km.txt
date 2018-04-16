@@ -11,6 +11,7 @@ MR_SAVECOMPLETE
 MR_UPDATETAGS / (filesInfo: name, tags)
 
 RM_NEWFILE / (fileName)
+MR_ISNEWCOMPLETE / int(1: complete, 0: existName, -1: 파일명규칙X)
 
 RM_SEARCHFILE / (searchText)
 

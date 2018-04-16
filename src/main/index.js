@@ -21,7 +21,12 @@ function saveFile(fileData){
 }
 function createFile(fileName){
     const filesInfo = fileManager.createFile(fileName);
-    win.webContents.send("MR_UPDATETAGS", filesInfo);
+    if(filesInfo == 0) win.webContents.send("MR_ISNEWCOMPLETE", 0);
+    else if(filesInfo == -1) win.webContents.send("MR_ISNEWCOMPLETE", -1);
+    else{
+        win.webContents.send("MR_UPDATETAGS", filesInfo);
+        win.webContents.send("MR_ISNEWCOMPLETE", 1);
+    }
 }
 function searchFile(searchText){
     const result = fileManager.searchFile(searchText);

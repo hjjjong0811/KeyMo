@@ -1,5 +1,5 @@
 import React from "react";
-import {Popover, Overlay, Button, FormControl, Form, ListGroup} from "react-bootstrap";
+import {Popover, Overlay, Button, FormControl, InputGroup, InputGroupButton, ListGroup} from "react-bootstrap";
 import ListItem from "./ListItem";
 import {ipcRenderer} from "electron";
 import style from "./css/NavPanel.css";
@@ -31,12 +31,19 @@ export default class FileList extends React.Component{
     }
     OnCreateWin_OKClick(e){
         e.preventDefault();
-        //파일명규칙검사필요
-        //props.files에 동일파일명존재 검사도
         ipcRenderer.send("RM_NEWFILE", this.state.newFileName + ".txt");
-        this.setState({
-            newFileName: "",
-            isOpenCreate: false
+        ipcRenderer.once("MR_ISNEWCOMPLETE", (_e, result) => {
+            if(result==1){
+                this.setState({
+                    newFileName: "",
+                    isOpenCreate: false
+                });
+
+            }else if(result==0){
+                console.log("이미 존재");
+            }else if(result==-1){
+                console.log("파일명규칙");
+            }
         });
     }
 
@@ -61,16 +68,20 @@ export default class FileList extends React.Component{
     renderCreatePopup(){
         return(
             <Popover title='Create TextFile'>
-                <Form onSubmit={this.OnCreateWin_OKClick}>
-                    <FormControl
-                        type="text"
-                        placeholder="file name"
-                        value={this.state.newFileName}
-                        onChange={this.OnFileNameChange}/>
-                    <Button type="submit" bsStyle="primary">
-                        Create
-                    </Button>
-                </Form>
+                <form onSubmit={this.OnCreateWin_OKClick}>
+                    <InputGroup>
+                        <FormControl
+                            type="text"
+                            placeholder="file name"
+                            value={this.state.newFileName}
+                            onChange={this.OnFileNameChange}/>
+                        <InputGroup.Button>
+                            <Button type="submit" bsStyle="primary">
+                                Create
+                            </Button>
+                        </InputGroup.Button>
+                    </InputGroup>
+                </form>
             </Popover>
         );
     }
