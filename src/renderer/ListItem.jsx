@@ -6,6 +6,7 @@ export default class ListItem extends React.Component {
   constructor(props){
     super(props);
     this.toStringTag = this.toStringTag.bind(this);
+    this.test = this.test.bind(this);
   }
   toStringTag(tags) {
     if (tags.length > 10) {
@@ -13,6 +14,9 @@ export default class ListItem extends React.Component {
     } else {
       return tags.join(' ');
     }
+  }
+  test(){
+    console.log("test~~~");
   }
 
   render() {
@@ -27,7 +31,21 @@ export default class ListItem extends React.Component {
           {this.toStringTag(this.props.txtInfo.tags)}
         </ListGroupItem>
         <ContextMenu
-          fileName={this.props.txtInfo.name}
+          ID={this.props.txtInfo.name}
+          menuList={[
+            {
+              label: "Open",
+              onSelect: this.props.onClickItem
+            },
+            {
+              label: "ReName",
+              onSelect: this.test
+            },
+            {
+              label: "Delete",
+              onSelect: this.test
+            }
+          ]}
         />
       </div>
     );

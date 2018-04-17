@@ -1,19 +1,34 @@
-﻿RM_OPENDIR
-MR_OPENDIR / (dirInfo : dirPath, filesInfo : name,tags)
+﻿//RM : Renderer->Main
+//MR : Main->Renderer
 
-RM_OPENFILE / (fileName)
-	MR_OPENFILE / (fileData: name,text)
+//() => 보내는 데이터
 
-MR_SAVEFILE / 
-RM_SAVEFILE / (fileData: name, text)
-MR_SAVECOMPLETE
 
-MR_UPDATETAGS / (filesInfo: name, tags)
 
-RM_NEWFILE / (fileName)
-MR_ISNEWCOMPLETE / int(1: complete, 0: existName, -1: 파일명규칙X)
+//Directory
+	RM_OPENDIR
+	MR_OPENDIR / (dirInfo : dirPath, filesInfo : name,tags)
 
-RM_SEARCHFILE / (searchText)
+//File_Open
+	RM_OPENFILE / (fileName)
+		MR_OPENFILE / (fileData: name,text)
 
-==================
-RM_RENAMEFILE / (nameCur, nameNew)
+//File_Save : [MR->] RM-> MR_UPDATETAGS+MR_SAVECOMPLETE
+	MR_SAVEFILE / 
+	RM_SAVEFILE / (fileData: name, text)
+		MR_SAVECOMPLETE
+
+//Files_Update
+	MR_UPDATETAGS / (filesInfo: name, tags)
+
+//File_Create : RM->MR_UPDATETAGS
+	RM_NEWFILE / (fileName)
+	MR_ISNEWCOMPLETE / int(1: complete, 0: existName, -1: 파일명규칙X)
+
+//Search : RM->MR_UPDATETAGS
+	RM_SEARCHFILE / (searchText)
+
+//File_Rename
+	RM_RENAMEFILE / (nameCur, nameNew)
+		MR_RENAMEFILE / (nameCur, nameNew)
+		MR_ISRENAMECOMPLETE / int(1: complete, 0: existName, -1: 파일명규칙)

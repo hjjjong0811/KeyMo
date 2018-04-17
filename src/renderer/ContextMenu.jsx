@@ -11,13 +11,11 @@ export default class ContextMenu extends React.Component {
         }
         this.openContextMenu = this.openContextMenu.bind(this);
         this.contextClose = this.contextClose.bind(this);
-        this.test = this.test.bind(this);
     }
 
     componentDidMount() {
         document.addEventListener("contextmenu", this.openContextMenu);
         document.addEventListener("click", this.contextClose);
-        console.log(this.menuElement.clientHeight);
         this.setState({
             height: this.menuElement.clientHeight
         })
@@ -29,7 +27,7 @@ export default class ContextMenu extends React.Component {
 
     openContextMenu(e) {
         e.preventDefault();
-        if (e.target.id === this.props.fileName) {
+        if (e.target.id === this.props.ID) {
             var pos = { x: e.clientX, y: e.clientY };
             this.setState({
                 position: pos,
@@ -57,9 +55,6 @@ export default class ContextMenu extends React.Component {
             height: this.state.height
         });
     }
-    test(){
-        console.log("눌렀다!");
-    }
 
     render() {
         return (
@@ -68,11 +63,11 @@ export default class ContextMenu extends React.Component {
                 style={this.getStyle()}
                 ref={(menuElement)=> this.menuElement = menuElement}
             >
-                    <MenuItem header>{this.props.fileName}</MenuItem>
-                    <MenuItem divider/>
-                    <MenuItem onSelect={this.test}>Open</MenuItem>
-                    <MenuItem>ReName</MenuItem>
-                    <MenuItem>Delete</MenuItem>
+                <MenuItem header>{this.props.ID}</MenuItem>
+                <MenuItem divider/>
+                {this.props.menuList.map(m=>
+                    <MenuItem onSelect={m.onSelect}>{m.label}</MenuItem>
+                )}
             </ul>
         )
     };
