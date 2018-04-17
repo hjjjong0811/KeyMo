@@ -1,6 +1,5 @@
 import React from "react";
 import style from "./css/NavPanel.css";
-import ListItem from "./ListItem";
 import {ipcRenderer} from "electron";
 import FileList from "./FileList";
 import {Button,FormControl, Form} from "react-bootstrap";
