@@ -28,7 +28,7 @@
 //Search : RM->MR_UPDATETAGS
 	RM_SEARCHFILE / (searchText)
 
-//File_Rename
+//File_Rename : RM -> MR_UPDATETAGS
 	RM_RENAMEFILE / (nameCur, nameNew)
 		MR_RENAMEFILE / (nameCur, nameNew)
 		MR_ISRENAMECOMPLETE / int(1: complete, 0: existName, -1: 파일명규칙)

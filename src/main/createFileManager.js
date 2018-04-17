@@ -106,13 +106,8 @@ class FileManager{
         return this.searchFiles;
     }
     createFile(fileName){
-        var regex = /^[^\/\\:*?"<>|;,]{1,200}(\.txt)$/;
-        if(!regex.test(fileName)) {
-            return -1;
-        }
-        if(fs.existsSync(this.dirPath + "\\" + fileName)){
-            return 0;
-        }
+        const result = this.checkFileName(fileName);
+        if(result != 1) return result;
         fs.writeFileSync(this.dirPath + "\\" + fileName, "", "utf8");
         for(var i=0; i<this.filesInfo.length; i++){
             if(fileName < this.filesInfo[i].name){
@@ -122,6 +117,18 @@ class FileManager{
         }
         this.filesInfo.push({name: fileName, tags: new Array()});
         this.searchFiles = this.filesInfo;
+        return this.filesInfo;
+    }
+    renameFile(nameCur, nameNew){
+        const result = this.checkFileName(nameNew);
+        if(result != 1) return result;
+        fs.renameSync(this.dirPath + "\\" + nameCur, this.dirPath + "\\" + nameNew);
+        this.filesInfo[this.filesInfo.findIndex(function(e){
+            return e.name === nameCur;
+        })].name = nameNew;
+        this.filesInfo.sort(function(a, b){
+            return a.name < b.name ? -1 : a.name > b.name ? 1:0;
+        });
         return this.filesInfo;
     }
     searchFile(searchText){
@@ -162,7 +169,16 @@ class FileManager{
         })
     }
 
-
+    checkFileName(fileName){  
+        var regex = /^[^\/\\:*?"<>|;,]{1,200}(\.txt)$/;
+        if(!regex.test(fileName)) {
+            return -1;
+        }
+        if(fs.existsSync(this.dirPath + "\\" + fileName)){
+            return 0;
+        }
+        return 1;
+    }
 }
 
 function createFileManager(){

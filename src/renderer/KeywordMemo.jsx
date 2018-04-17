@@ -37,6 +37,10 @@ export default class KeywordMemo extends React.Component{
             });
             this.getTagList();
         });
+        ipcRenderer.on("MR_RENAMEFILE", (_e, nameCur, nameNew) => {
+            if(this.state.selectedFile === nameCur) this.setState({selectedFile: nameNew});
+            document.title = document.title.replace(nameCur, nameNew);
+        });
     }
     componentWillUnmount(){
         ipcRenderer.removeAllListeners();

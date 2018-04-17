@@ -40,6 +40,15 @@ function createWindow(){
         win = null;
     });
 }
+function renameFile(nameCur, nameNew){
+    const result = fileManager.renameFile(nameCur, nameNew);
+    if(result == 0 || result == -1) win.webContents.send("MR_ISRENAMECOMPLETE", result);
+    else{
+        win.webContents.send("MR_UPDATETAGS", result);
+        win.webContents.send("MR_ISRENAMECOMPLETE", 1);
+        win.webContents.send("MR_RENAMEFILE", nameCur, nameNew);
+    }
+}
 
 function setAppMenu(){
     const template =[
@@ -104,6 +113,7 @@ app.on("ready", () =>{
     ipcMain.on("RM_SAVEFILE", (_e, fileData) => saveFile(fileData));
     ipcMain.on("RM_NEWFILE", (_e, fileName) => createFile(fileName));
     ipcMain.on("RM_SEARCHFILE", (_e, searchText) => searchFile(searchText));
+    ipcMain.on("RM_RENAMEFILE", (_e, nameCur, nameNew) => renameFile(nameCur, nameNew));
 });
 
 app.on("window-all-closed", () =>{
