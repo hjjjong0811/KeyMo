@@ -1,13 +1,13 @@
 import React from "react";
 import { MenuItem } from "react-bootstrap";
-import style from "./css/ListItem.css";
 
 export default class ContextMenu extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isOpen : false,
-            position : {x:0,y:0}
+            position : {x:0,y:0},
+            height : 0
         }
         this.openContextMenu = this.openContextMenu.bind(this);
         this.contextClose = this.contextClose.bind(this);
@@ -17,12 +17,14 @@ export default class ContextMenu extends React.Component {
     componentDidMount() {
         document.addEventListener("contextmenu", this.openContextMenu);
         document.addEventListener("click", this.contextClose);
-        document.addEventListener("scroll", this.contextClose);
+        console.log(this.menuElement.clientHeight);
+        this.setState({
+            height: this.menuElement.clientHeight
+        })
     }
     componentWillUnmount() {
         document.removeEventListener("contextmenu", this.openContextMenu);
         document.removeEventListener("click", this.contextClose);
-        document.removeEventListener("scroll", this.contextClose);
     }
 
     openContextMenu(e) {
@@ -33,21 +35,26 @@ export default class ContextMenu extends React.Component {
                 position: pos,
                 isOpen: true
             });
+        }else{
+            this.setState({ isOpen: false });
         }
     }
     contextClose() {
         this.setState({ isOpen: false });
     }
     getStyle() {
+        if(!this.state.isOpen){return({display:"block",top: "-999999px"});}
         var top = this.state.position.y;
-        if(window.innerHeight < top + 100){
-            top = top - 100;
+        if(window.innerHeight < top + this.state.height){
+            top = top - this.state.height;
         }
         return ({
+            position: "fixed",
+            display: "block",
             top: top,
             left: this.state.position.x,
             width: "150px",
-            height: "100px"
+            height: this.state.height
         });
     }
     test(){
@@ -56,13 +63,17 @@ export default class ContextMenu extends React.Component {
 
     render() {
         return (
-            <div
-                className={this.state.isOpen ? style.contextMenu_Active : style.contextMenu_Disable}
-                onClick={this.test}
+            <ul
+                className="dropdown-menu open"
                 style={this.getStyle()}
+                ref={(menuElement)=> this.menuElement = menuElement}
             >
-                {this.props.fileName}
-            </div>
+                    <MenuItem header>{this.props.fileName}</MenuItem>
+                    <MenuItem divider/>
+                    <MenuItem onSelect={this.test}>Open</MenuItem>
+                    <MenuItem>ReName</MenuItem>
+                    <MenuItem>Delete</MenuItem>
+            </ul>
         )
     };
 }

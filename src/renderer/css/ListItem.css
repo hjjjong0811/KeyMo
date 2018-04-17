@@ -1,9 +1,0 @@
-.contextMenu_Active{
-    position: fixed;
-    z-index: 100;
-    background-color: pink;
-    box-shadow: 0px 1px 2px 2px #808080;
-}
-.contextMenu_Disable{
-    display: none;
-}

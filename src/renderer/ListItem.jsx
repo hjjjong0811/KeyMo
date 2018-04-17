@@ -1,6 +1,5 @@
 import React from "react";
 import { ListGroupItem } from "react-bootstrap";
-import style from "./css/ListItem.css";
 import ContextMenu from "./ContextMenu";
 
 export default class ListItem extends React.Component {
