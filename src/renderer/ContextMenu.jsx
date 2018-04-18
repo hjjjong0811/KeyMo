@@ -27,7 +27,7 @@ export default class ContextMenu extends React.Component {
 
     openContextMenu(e) {
         e.preventDefault();
-        if (e.target.id === this.props.ID) {
+        if (this.props.container.contains(e.target)) {
             var pos = { x: e.clientX, y: e.clientY };
             this.setState({
                 position: pos,

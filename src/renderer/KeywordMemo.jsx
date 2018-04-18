@@ -41,6 +41,18 @@ export default class KeywordMemo extends React.Component{
             if(this.state.selectedFile === nameCur) this.setState({selectedFile: nameNew});
             document.title = document.title.replace(nameCur, nameNew);
         });
+        ipcRenderer.on("MR_DELETEFILE", (_e, data) => {
+            if(this.state.selectedFile === data.fileName){
+                this.setState({
+                    selectedFile: ""
+                });
+                document.title = "KeyMo - " + this.state.dirPath;
+            }
+            this.setState({
+                files: data.filesInfo
+            });
+            this.getTagList();
+        })
     }
     componentWillUnmount(){
         ipcRenderer.removeAllListeners();

@@ -1,7 +1,8 @@
 import React from "react";
-import { ListGroupItem, Form, FormControl, Overlay, Tooltip } from "react-bootstrap";
+import { ListGroupItem, Overlay, Tooltip } from "react-bootstrap";
 import ContextMenu from "./ContextMenu";
 import { ipcRenderer } from "electron";
+import style from "./css/ListItemStyle";
 
 export default class ListItem extends React.Component {
   constructor(props) {
@@ -14,11 +15,13 @@ export default class ListItem extends React.Component {
     }
     this.onClickListener = this.onClickListener.bind(this);
     this.toStringTag = this.toStringTag.bind(this);
+    this.preventEvent = this.preventEvent.bind(this);
 
     this.contextRename = this.contextRename.bind(this);
     this.onRenameChange = this.onRenameChange.bind(this);
     this.renameFileSubmit = this.renameFileSubmit.bind(this);
 
+    this.onDelete = this.onDelete.bind(this);
   }
   onClickListener(e){
     if(this.container && !this.container.contains(e.target)){
@@ -43,7 +46,10 @@ export default class ListItem extends React.Component {
     }
   }
 
-
+  preventEvent(e){
+    e.stopPropagation();
+  }
+  
   // ** Rename
   contextRename() {
     this.setState({ isNaming: true, renameText: this.props.txtInfo.name.slice(0, -4) });
@@ -51,7 +57,6 @@ export default class ListItem extends React.Component {
   onRenameChange(e) {
     this.setState({
       renameText: e.target.value,
-      target_form: e.target,
       isOpenTooltip_rename: false
     });
   }
@@ -88,24 +93,30 @@ export default class ListItem extends React.Component {
     });
   }
 
+  // ** Delete
+  onDelete(){
+    ipcRenderer.send("RM_DELETEFILE", this.props.txtInfo.name);
+  }
+
   renderRename(){
     return(
-        <Form inline onSubmit={this.renameFileSubmit}>
-          <FormControl
+        <form onSubmit={this.renameFileSubmit}
+        style={this.props.selected? style.listItemSelected : style.listItem}>
+          <input
             type="text"
             value={this.state.renameText}
             placeholder="Enter New Name"
             onChange={this.onRenameChange}
-            onClick="#"
+            onClick={this.preventEvent}
+            style={{width: "100%"}}
           />
           <Overlay
-            container= {this}
-            target= {this.state.target_form}
+            target= {this}
             show={this.state.isOpenTooltip_rename}
-            placement="top">
+            placement="right">
             <Tooltip id="fileNametooltip">{this.state.renameTooltip}</Tooltip>
           </Overlay>
-        </Form>
+        </form>
     );
   }
 
@@ -115,13 +126,16 @@ export default class ListItem extends React.Component {
         <ListGroupItem
           id={this.props.txtInfo.name}
           onClick={this.props.onClickItem}
-          active={this.props.selected}
+          ref={(target_form)=> this.target_form = target_form}
+          style={this.props.selected? style.listItemSelected : style.listItem}
         >
-          {this.state.isNaming ? this.renderRename() : this.props.txtInfo.name}<br />
-          {this.toStringTag(this.props.txtInfo.tags)}
+          {this.state.isNaming ? this.renderRename() :
+             <h4 style={style.txtSubject}>{this.props.txtInfo.name}</h4>}
+          <h6 style={style.txtTags}>{this.toStringTag(this.props.txtInfo.tags)}</h6>
         </ListGroupItem>
         <ContextMenu
           ID={this.props.txtInfo.name}
+          container={this.container}
           menuList={[
             {
               label: "Open",
@@ -133,7 +147,7 @@ export default class ListItem extends React.Component {
             },
             {
               label: "Delete",
-              onSelect: this.test
+              onSelect: this.onDelete
             }
           ]}
         />

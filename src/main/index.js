@@ -49,6 +49,10 @@ function renameFile(nameCur, nameNew){
         win.webContents.send("MR_RENAMEFILE", nameCur, nameNew);
     }
 }
+function deleteFile(fileName){
+    const filesInfo = fileManager.deleteFile(fileName);
+    win.webContents.send("MR_DELETEFILE", filesInfo);
+}
 
 function setAppMenu(){
     const template =[
@@ -114,6 +118,7 @@ app.on("ready", () =>{
     ipcMain.on("RM_NEWFILE", (_e, fileName) => createFile(fileName));
     ipcMain.on("RM_SEARCHFILE", (_e, searchText) => searchFile(searchText));
     ipcMain.on("RM_RENAMEFILE", (_e, nameCur, nameNew) => renameFile(nameCur, nameNew));
+    ipcMain.on("RM_DELETEFILE", (_e, fileName) => deleteFile(fileName));
 });
 
 app.on("window-all-closed", () =>{

@@ -131,6 +131,16 @@ class FileManager{
         });
         return this.filesInfo;
     }
+    deleteFile(fileName){
+        fs.unlinkSync(this.dirPath + "\\" + fileName);
+        this.filesInfo.splice(this.filesInfo.findIndex(function(e){
+            return e.name === fileName;
+        }), 1);
+        return {
+            fileName: fileName,
+            filesInfo: this.filesInfo
+        };
+    }
     searchFile(searchText){
         if(searchText === ""){
             this.searchFiles = this.filesInfo;
