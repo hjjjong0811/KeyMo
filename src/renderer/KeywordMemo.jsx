@@ -2,6 +2,7 @@ import React from "react";
 import NavPanel from "./NavPanel";
 import ViewPanel from "./ViewPanel";
 import style from "./css/KeywordMemo";
+import theme_1 from "./css/Theme_1";
 import {ipcRenderer} from "electron";
 
 export default class KeywordMemo extends React.Component{
@@ -11,7 +12,9 @@ export default class KeywordMemo extends React.Component{
             dirPath: "",
             selectedFile: "",
             files: [],
-            allTags: []
+            allTags: [],
+
+            theme: theme_1
         };
         this.getTagList = this.getTagList.bind(this);
         this.OnClickOpenDir = this.OnClickOpenDir.bind(this);
@@ -77,9 +80,9 @@ export default class KeywordMemo extends React.Component{
     renderPage(){
         if(this.state.dirPath === ""){
             return(
-                <div style={style.notOpenDir}>
-                    <span style={style.notOpenDirMsg}>
-                        <img style={style.notOpenDirImg} src={require("./../images/ico_app.gif")}/>
+                <div style={Object.assign(style.notOpenDir, this.state.theme.empty_back)}>
+                    <span style={Object.assign(style.notOpenDirMsg, this.state.theme.empty_content)}>
+                        <img style={Object.assign(style.notOpenDirImg, this.state.theme.empty_content)} src={require("./../images/ico_app.gif")}/>
                         <br/><br/>
                         KeyMo is a text editor and is short for keyword memo.<br/>
                         With KeyMo, you can easily write and find text files in your directory.
@@ -96,12 +99,16 @@ export default class KeywordMemo extends React.Component{
                             selectedFile = {this.state.selectedFile}
                             files = {this.state.files}
                             allTags = {this.state.allTags}
-                            id="listPanel"/>
+                            id="listPanel"
+                            theme = {this.state.theme}
+                        />
                     </div>
                     <ViewPanel
                         dirPath = {this.state.dirPath}
                         fileName = {this.state.selectedFile}
-                        id="viewPanel"/>
+                        id="viewPanel"
+                        theme = {this.state.theme}
+                    />
                 </div>
             );
         }

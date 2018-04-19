@@ -1,5 +1,5 @@
 import React from "react";
-import style from "./css/ViewPanel.css";
+import style from "./css/ViewPanel";
 import {ipcRenderer} from "electron";
 import {Button} from "react-bootstrap";
 
@@ -74,21 +74,21 @@ export default class ViewPanel extends React.Component{
     render(){
         return(
             this.props.fileName === ""?
-                <div className= {style.notOpenFile}>
-                    <span className={style.notOpenFileMsg}>Open Text File</span>
+                <div style= {Object.assign(style.notOpenFile, this.props.theme.empty_back)}>
+                    <span style={Object.assign(style.notOpenFileMsg, this.props.theme.empty_content)}>Open Text File</span>
                 </div>
                 :
-                <div className= {style.viewPanel}>
+                <div style= {style.viewPanel}>
                     <textarea
                             ref="memo"
-                            className={style.memo}
+                            style={style.memo}
                             value={this.state.text}
                             onChange={this.onChangeText}
                             onKeyDown={this.onKeyDown}
                         />
                     <Button
                             bsStyle={this.state.isChange? "primary":"default"}
-                            className={style.btnOK}
+                            style={style.btnOK}
                             disabled={this.state.isSaving}
                             onClick={this.state.isSaving? null : this.onSaveClick}>
                         {this.state.isSaving? "SAVE..." : "SAVE"}
