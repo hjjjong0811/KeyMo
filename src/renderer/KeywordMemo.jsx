@@ -1,7 +1,7 @@
 import React from "react";
 import NavPanel from "./NavPanel";
 import ViewPanel from "./ViewPanel";
-import style from "./css/KeywordMemo.css";
+import style from "./css/KeywordMemo";
 import {ipcRenderer} from "electron";
 
 export default class KeywordMemo extends React.Component{
@@ -14,6 +14,7 @@ export default class KeywordMemo extends React.Component{
             allTags: []
         };
         this.getTagList = this.getTagList.bind(this);
+        this.OnClickOpenDir = this.OnClickOpenDir.bind(this);
     }
     componentDidMount(){
         ipcRenderer.on("MR_OPENDIR", (_e, dirInfo) => {
@@ -69,17 +70,27 @@ export default class KeywordMemo extends React.Component{
         this.setState({allTags: tags});
     }
 
+    OnClickOpenDir(){
+        ipcRenderer.send("RM_OPENDIR");
+    }
+
     renderPage(){
         if(this.state.dirPath === ""){
             return(
-                <div>
-                    Please Open Directory
+                <div style={style.notOpenDir}>
+                    <span style={style.notOpenDirMsg}>
+                        <img style={style.notOpenDirImg} src={require("./../images/ico_app.gif")}/>
+                        <br/><br/>
+                        KeyMo is a text editor and is short for keyword memo.<br/>
+                        With KeyMo, you can easily write and find text files in your directory.
+                        To use this, <a onClick={this.OnClickOpenDir}>open the directory</a>.
+                    </span>
                 </div>
             );
         }else{
             return(
-                <div className={style.keywordMemo}>
-                    <div className={style.navPanel}>
+                <div style={style.keywordMemo}>
+                    <div style={style.navPanel}>
                         <NavPanel
                             dirPath = {this.state.dirPath}
                             selectedFile = {this.state.selectedFile}
@@ -98,7 +109,7 @@ export default class KeywordMemo extends React.Component{
 
     render(){
         return(
-            <div className={style.keywordMemo}>
+            <div style={style.keywordMemo}>
                 {this.renderPage()}
             </div>
         );

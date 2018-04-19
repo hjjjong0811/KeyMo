@@ -73,22 +73,27 @@ export default class ViewPanel extends React.Component{
 
     render(){
         return(
-            <div className= {style.viewPanel}>
-                <textarea
-                        ref="memo"
-                        className={style.memo}
-                        value={this.state.text}
-                        onChange={this.onChangeText}
-                        onKeyDown={this.onKeyDown}
-                    />
-                <Button
-                        bsStyle={this.state.isChange? "primary":"default"}
-                        className={style.btnOK}
-                        disabled={this.state.isSaving}
-                        onClick={this.state.isSaving? null : this.onSaveClick}>
-                    {this.state.isSaving? "SAVE..." : "SAVE"}
-                </Button>
-            </div>
+            this.props.fileName === ""?
+                <div className= {style.notOpenFile}>
+                    <span className={style.notOpenFileMsg}>Open Text File</span>
+                </div>
+                :
+                <div className= {style.viewPanel}>
+                    <textarea
+                            ref="memo"
+                            className={style.memo}
+                            value={this.state.text}
+                            onChange={this.onChangeText}
+                            onKeyDown={this.onKeyDown}
+                        />
+                    <Button
+                            bsStyle={this.state.isChange? "primary":"default"}
+                            className={style.btnOK}
+                            disabled={this.state.isSaving}
+                            onClick={this.state.isSaving? null : this.onSaveClick}>
+                        {this.state.isSaving? "SAVE..." : "SAVE"}
+                    </Button>
+                </div>
         );
     }
 }
