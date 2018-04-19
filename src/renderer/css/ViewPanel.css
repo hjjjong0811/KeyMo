@@ -1,0 +1,41 @@
+.viewPanel{
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+}
+.memo{
+    width: 100%;
+    height: 100%;
+    display: block;
+    resize: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    -webkit-flex: 1;
+    flex: 1;
+}
+.btnOK{
+    margin: 5px;
+    height: 30px;
+}
+.notOpenFile{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+.notOpenFileImg{
+    position: relative;
+    height: 64px;
+}
+.notOpenFileMsg{
+    position: relative;
+    width: 100%;
+    top: calc(50% - 80px);
+    padding: 50px;
+}

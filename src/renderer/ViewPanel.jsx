@@ -1,5 +1,5 @@
 import React from "react";
-import style from "./css/ViewPanel";
+import layout from "./css/ViewPanel.css";
 import {ipcRenderer} from "electron";
 import {Button} from "react-bootstrap";
 
@@ -74,21 +74,32 @@ export default class ViewPanel extends React.Component{
     render(){
         return(
             this.props.fileName === ""?
-                <div style= {Object.assign(style.notOpenFile, this.props.theme.empty_back)}>
-                    <span style={Object.assign(style.notOpenFileMsg, this.props.theme.empty_content)}>Open Text File</span>
+                <div className={layout.notOpenFile} style= {this.props.theme.empty_back}>
+                    <span className={layout.notOpenFileMsg} style={this.props.theme.empty_content}>
+                        <object
+                            type="image/svg+xml"
+                            data={require("./../images/keyword.svg")}
+                            className={layout.notOpenFileImg}
+                            style={this.props.theme.empty_content}
+                        />
+                        <br/><br/>
+                        Open the text file using the list on the left.<br/>
+                        If you want to create a new file,<br/>
+                        click "Create TextFile" in the upper left corner.
+                    </span>
                 </div>
                 :
-                <div style= {style.viewPanel}>
+                <div className= {layout.viewPanel}>
                     <textarea
                             ref="memo"
-                            style={style.memo}
+                            className={layout.memo}
                             value={this.state.text}
                             onChange={this.onChangeText}
                             onKeyDown={this.onKeyDown}
                         />
                     <Button
                             bsStyle={this.state.isChange? "primary":"default"}
-                            style={style.btnOK}
+                            className={layout.btnOK}
                             disabled={this.state.isSaving}
                             onClick={this.state.isSaving? null : this.onSaveClick}>
                         {this.state.isSaving? "SAVE..." : "SAVE"}

@@ -1,0 +1,30 @@
+.keywordMemo{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.navPanel{
+    min-width: 400px;
+    max-width: 400px;
+    height: 100%;
+}
+
+.notOpenDir{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+.notOpenDirImg{
+    position: relative;
+    height: 128px;
+}
+.notOpenDirMsg{
+    position: relative;
+    top:calc(50% - 120px);
+    font-size: 14pt;
+}

@@ -1,7 +1,7 @@
 import React from "react";
 import NavPanel from "./NavPanel";
 import ViewPanel from "./ViewPanel";
-import style from "./css/KeywordMemo";
+import layout from "./css/KeywordMemo.css";
 import theme_1 from "./css/Theme_1";
 import {ipcRenderer} from "electron";
 
@@ -80,20 +80,25 @@ export default class KeywordMemo extends React.Component{
     renderPage(){
         if(this.state.dirPath === ""){
             return(
-                <div style={Object.assign(style.notOpenDir, this.state.theme.empty_back)}>
-                    <span style={Object.assign(style.notOpenDirMsg, this.state.theme.empty_content)}>
-                        <img style={Object.assign(style.notOpenDirImg, this.state.theme.empty_content)} src={require("./../images/ico_app.gif")}/>
+                <div className={layout.notOpenDir} style={this.state.theme.empty_back}>
+                    <span className={layout.notOpenDirMsg} style={this.state.theme.empty_content}>
+                        <object
+                            type="image/svg+xml"
+                            data={require("./../images/keyword.svg")}
+                            className={layout.notOpenDirImg}
+                            style={this.state.theme.empty_content}
+                        />
                         <br/><br/>
                         KeyMo is a text editor and is short for keyword memo.<br/>
-                        With KeyMo, you can easily write and find text files in your directory.
-                        To use this, <a onClick={this.OnClickOpenDir}>open the directory</a>.
+                        With KeyMo, you can easily write and find text files in your directory.<br/>
+                        To use this, <a style={{fontSize: "18pt"}} onClick={this.OnClickOpenDir}>open the directory</a>.
                     </span>
                 </div>
             );
         }else{
             return(
-                <div style={style.keywordMemo}>
-                    <div style={style.navPanel}>
+                <div className={layout.keywordMemo}>
+                    <div className={layout.navPanel}>
                         <NavPanel
                             dirPath = {this.state.dirPath}
                             selectedFile = {this.state.selectedFile}
@@ -116,7 +121,7 @@ export default class KeywordMemo extends React.Component{
 
     render(){
         return(
-            <div style={style.keywordMemo}>
+            <div className={layout.keywordMemo}>
                 {this.renderPage()}
             </div>
         );

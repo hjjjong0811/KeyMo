@@ -1,5 +1,5 @@
 import React from "react";
-import style from "./css/NavPanel.css";
+import layout from "./css/NavPanel.css";
 import {ipcRenderer} from "electron";
 import FileList from "./FileList";
 import {Button,FormControl, Form} from "react-bootstrap";
@@ -69,44 +69,54 @@ export default class NavPanel extends React.Component{
 
     render(){
         return(
-            <div className={style.verticalFlex}>
-                <div className={style.searchPanel}>
-                    <button className={style.dirBtn} onClick={this.OnClickOpenDir}>OPENDIR</button>
-                    <button onClick={this.OnClickViewAllFile}>VIEWALLFILE</button>
+            <div className={layout.verticalFlex}>
+                <div className={layout.searchPanel} style={this.props.theme.container_1}>
+                    {/* Quick Icon */}
+                    <img
+                        src={require("./../images/folder.svg")}
+                        className={layout.icon}
+                        onClick={this.OnClickOpenDir}/>
+                    <img
+                        src={require("./../images/house.svg")}
+                        className={layout.icon}
+                        onClick={this.OnClickViewAllFile}/>
+                    {/* Search */}
+                    <Form inline className={layout.searchPanel + " " + layout.remain} onSubmit={this.OnSearchClick} style={{background: "inherit"}}>
+                        <FormControl
+                            type="text"
+                            placeholder="Search Tag"
+                            value={this.state.searchText}
+                            className={layout.searchText + " " + layout.remain}
+                            onChange={this.OnSearchChange}/>
+                            <input
+                                type="image"
+                                src={require("./../images/magnifying-glass.svg")}
+                                className={layout.icon}
+                                alt="Submit"/>
+                    </Form>
                 </div>
 
-                {/* SearchPanel */}
-                <Form onSubmit={this.OnSearchClick} className={style.searchPanel}>
-                    <FormControl
-                        type="text"
-                        placeholder="Search Tag"
-                        value={this.state.searchText}
-                        className={style.searchText}
-                        onChange={this.OnSearchChange}/>
-                    <Button className={style.searchButton} type="submit" bsStyle="primary"/>
-                </Form>
-
                 {/* File Or Tag List */}
-                <div className={style.flexRemain}>
+                <div className={layout.flexRemain}>
                     {/* Tab Button.. */}
                     <div>
                         <span
-                            className={this.state.activeTab === 1? style.btnSimple_Selected : style.btnSimple}
+                            className={this.state.activeTab === 1? layout.btnSimple_Selected : layout.btnSimple}
                             onClick={this.onClickTab.bind(this, 1)}>
                                 Files
                         </span>
                         <span
-                            className={this.state.activeTab === 2? style.btnSimple_Selected : style.btnSimple}
+                            className={this.state.activeTab === 2? layout.btnSimple_Selected : layout.btnSimple}
                             onClick={this.onClickTab.bind(this, 2)}>
                                 Tags
                         </span>
                     </div>
                     {/* Tab Contents */}
-                    <div class={this.state.activeTab === 1?style.tab_Active:style.tab_Disable}>
+                    <div class={this.state.activeTab === 1?layout.tab_Active:layout.tab_Disable}>
                         <FileList files={this.props.files} selectedFile={this.props.selectedFile}/>
                     </div>
-                    <div class={this.state.activeTab === 2?style.tab_Active:style.tab_Disable}>
-                        <div className={style.prSize_scroll}>
+                    <div class={this.state.activeTab === 2?layout.tab_Active:layout.tab_Disable}>
+                        <div className={layout.prSize_scroll}>
                             {this.props.allTags.map(tag=>
                                 <Button onClick={this.OnTagClick.bind(this, tag)}>{tag}</Button>
                                 )}
