@@ -7,12 +7,13 @@ let win;
 let fileManager;
 
 function openDirectory(){
-    const dirInfo = fileManager.openDir();
+    const dirInfo = fileManager.openDir(win);
     if(dirInfo != null) win.webContents.send("MR_OPENDIR", dirInfo);
 }
 function openFile(fileName){
     const fileData = fileManager.openFile(fileName);
-    win.webContents.send("MR_OPENFILE", fileData);
+    if(fileData == null){}
+    else{win.webContents.send("MR_OPENFILE", fileData);}
 }
 function saveFile(fileData){
     const filesInfo = fileManager.saveFile(fileData);
@@ -91,7 +92,7 @@ function setAppMenu(){
         {
             label: "Help",
             submenu: [
-                {label: "Info"}
+                {label: "About", click: ()=>win.webContents.send("MR_MODAL_ABOUT")}
             ]
         }
     ];

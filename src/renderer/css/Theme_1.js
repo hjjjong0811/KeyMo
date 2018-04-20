@@ -7,10 +7,10 @@ module.exports = {
         color: "rgba(0,0,0,180)"
     },
     container_1:{
-        backgroundColor:"#FF7200"
+        backgroundColor:"#dbebe9"
     },
     container_2:{
-        backgroundColor:"#008B7C"
+        backgroundColor:"#FF7200,008B7C"
     }
 
 }

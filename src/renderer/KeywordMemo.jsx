@@ -88,10 +88,11 @@ export default class KeywordMemo extends React.Component{
                             className={layout.notOpenDirImg}
                             style={this.state.theme.empty_content}
                         />
-                        <br/><br/>
-                        KeyMo is a text editor and is short for keyword memo.<br/>
-                        With KeyMo, you can easily write and find text files in your directory.<br/>
-                        To use this, <a style={{fontSize: "18pt"}} onClick={this.OnClickOpenDir}>open the directory</a>.
+                        <br/>
+                        <h1>KEYMO</h1>
+                        <a onClick={this.OnClickOpenDir}>
+                            Open the directory
+                        </a>
                     </span>
                 </div>
             );

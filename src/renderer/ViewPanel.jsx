@@ -82,10 +82,6 @@ export default class ViewPanel extends React.Component{
                             className={layout.notOpenFileImg}
                             style={this.props.theme.empty_content}
                         />
-                        <br/><br/>
-                        Open the text file using the list on the left.<br/>
-                        If you want to create a new file,<br/>
-                        click "Create TextFile" in the upper left corner.
                     </span>
                 </div>
                 :

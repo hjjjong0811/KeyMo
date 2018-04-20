@@ -14,9 +14,11 @@
 }
 
 .notOpenDir{
-    position: relative;
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
     text-align: center;
 }
 .notOpenDirImg{
@@ -25,6 +27,7 @@
 }
 .notOpenDirMsg{
     position: relative;
-    top:calc(50% - 120px);
-    font-size: 14pt;
+    display: inline-block;
+    top:calc(50% - 100px);
+    background-color: pink;
 }

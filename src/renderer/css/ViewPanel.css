@@ -36,6 +36,6 @@
 .notOpenFileMsg{
     position: relative;
     width: 100%;
-    top: calc(50% - 80px);
+    top: calc(50% - 40px);
     padding: 50px;
 }

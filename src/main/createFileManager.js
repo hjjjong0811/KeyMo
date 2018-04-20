@@ -1,4 +1,4 @@
-import {dialog} from "electron";
+import {dialog, BrowserWindow} from "electron";
 import fs from "fs";
 const path = require("path");
 
@@ -6,7 +6,6 @@ class FileManager{
     constructor(){
         this.dirPath = "";
         this.filesInfo;
-        this.fileName = "";
         this.searchFiles;
     }
 
@@ -18,20 +17,22 @@ class FileManager{
         while(beginPos > -1){
             var endPos = data.indexOf(";", beginPos + 1);
             if(endPos <= -1) break;
+
             var bp = beginPos;
             do{
                 beginPos = bp;
                 bp = data.indexOf("#", beginPos + 1);
             }while(bp != -1 && bp < endPos);
+
             tags.push(data.substr(beginPos, endPos - beginPos + 1));
             beginPos = data.indexOf("#", endPos + 1);
         }
         return tags;
     }
 
-    openDir(){
+    openDir(win){
         //Open Folder Dialog
-        const dir = dialog.showOpenDialog(
+        const dir = dialog.showOpenDialog(win,
             {
                 title: "Open Folder",
                 properties: ["openDirectory"],
@@ -41,26 +42,20 @@ class FileManager{
             return null;
         }
         this.dirPath = dir[0];
-        this.fileName = "";
         
         //Get Info of Files in DIR
         var filesInfo = new Array();
         var i = 0;
         fs.readdirSync(this.dirPath).forEach(file => {
-            if(path.extname(file) === ".txt"){
-                //Open File
-                try{
+                if(path.extname(file) === ".txt"){
                     var data = fs.readFileSync(this.dirPath + "\\" + file, "utf8");
-                }catch(err){
-                    console.log("fileManager : openDir() : "+err);
-                    return;
+
+                    filesInfo[i] = {
+                        name : file,
+                        tags : this.getTags(data),
+                    }
+                    i++;
                 }
-                filesInfo[i] = {
-                    name : file,
-                    tags : this.getTags(data),
-                }
-            }
-            i++;
             }
         );
         this.filesInfo = filesInfo;
@@ -72,17 +67,11 @@ class FileManager{
         };
     }
     openFile(fileName){
-        //file Open, text전달
-        this.fileName = fileName;
-        //Open File
-        try{
-            var data = fs.readFileSync(this.dirPath + "\\" + fileName, "utf8");
-        }catch(err){
-            console.log(err);
-            return;
-        }
+        var filePath = this.dirPath + "\\" + fileName;
+        if(!fs.existsSync(filePath)) return null;
+        var data = fs.readFileSync(filePath, "utf8");
         return {
-            name: this.fileName,
+            name: fileName,
             text: data
         };
     }
@@ -94,15 +83,20 @@ class FileManager{
         fs.writeFileSync(this.dirPath + "\\" + fileData.name, data, "utf8");
         for(var i=0; i<this.filesInfo.length; i++){
             if(this.filesInfo[i].name === fileData.name){
-                this.searchFiles[this.searchFiles.indexOf(this.filesInfo[i])] =
-                    this.filesInfo[i] = {
+                var index = this.searchFiles.indexOf(this.filesInfo[i]);
+                if(index > -1){
+                    this.searchFiles[index] = {
                         name : fileData.name,
                         tags : this.getTags(data)
+                    };
                 }
+                this.filesInfo[i] = {
+                        name : fileData.name,
+                        tags : this.getTags(data)
+                    };
                 break;
             }
         }
-        console.log("save complete");
         return this.searchFiles;
     }
     createFile(fileName){
@@ -112,6 +106,7 @@ class FileManager{
         for(var i=0; i<this.filesInfo.length; i++){
             if(fileName < this.filesInfo[i].name){
                 this.filesInfo.splice(i, 0, {name: fileName, tags: new Array()});
+                this.searchFiles = this.filesInfo;
                 return this.filesInfo;
             }
         }
@@ -122,23 +117,44 @@ class FileManager{
     renameFile(nameCur, nameNew){
         const result = this.checkFileName(nameNew);
         if(result != 1) return result;
+
         fs.renameSync(this.dirPath + "\\" + nameCur, this.dirPath + "\\" + nameNew);
-        this.filesInfo[this.filesInfo.findIndex(function(e){
-            return e.name === nameCur;
-        })].name = nameNew;
+
+        var index_files = this.filesInfo.findIndex(function(e){
+                return e.name === nameCur;
+            });
+        this.filesInfo[index_files].name = nameNew;
         this.filesInfo.sort(function(a, b){
             return a.name < b.name ? -1 : a.name > b.name ? 1:0;
         });
+
+        var index_search = this.searchFiles.indexOf(this.filesInfo[index_files]);
+        if(index_search > -1){
+            this.searchFiles[index_search].name = nameNew;
+        }
+        this.searchFiles.sort(function(a, b){
+            return a.name < b.name ? -1 : a.name > b.name ? 1:0;
+        });
+
         return this.filesInfo;
     }
     deleteFile(fileName){
-        fs.unlinkSync(this.dirPath + "\\" + fileName);
-        this.filesInfo.splice(this.filesInfo.findIndex(function(e){
+        var filePath = this.dirPath + "\\" + fileName;
+        if(fs.existsSync(filePath)){
+            fs.unlinkSync(filePath);
+        }
+        var index = this.filesInfo.findIndex(function(e){
             return e.name === fileName;
-        }), 1);
+        });
+        if(index != -1) this.filesInfo.splice(index, 1);
+
+        index = this.searchFiles.findIndex(function(e){
+            return e.name === fileName;
+        });
+        if(index != -1) this.searchFiles.splice(index, 1);
         return {
             fileName: fileName,
-            filesInfo: this.filesInfo
+            filesInfo: this.searchFiles
         };
     }
     searchFile(searchText){
@@ -165,18 +181,6 @@ class FileManager{
         }
         this.searchFiles = filesResult;
         return this.searchFiles;
-    }
-
-    showOpenDirDialog(){
-        return new Promise( (resolve, reject) => {
-            const files = dialog.showOpenDialog(
-                {
-                    title: "Open Folder",
-                    properties: ["openDirectory"],
-                }
-            );
-
-        })
     }
 
     checkFileName(fileName){  
