@@ -71,19 +71,6 @@
 .tab_Disable{
     display: none;
 }
-
-.btnSimple_Selected{
-    text-align: center;
-    display: inline-block;
-    box-sizing: border-box;
-    width:50%;
-    height:30px;
-    padding: 5px;
-    border-top: none;
-    border-left: 0.1px solid gainsboro;
-    border-right: 0.1px solid gainsboro;
-    border-bottom: 3px solid #337AB7;
-}
 .btnSimple{
     text-align: center;
     display: inline-block;
@@ -92,7 +79,4 @@
     height:30px;
     padding: 5px;
     border-top: none;
-    border-left: 0.1px solid gainsboro;
-    border-right: 0.1px solid gainsboro;
-    border-bottom: 0.1px solid gainsboro;
 }

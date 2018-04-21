@@ -92,10 +92,11 @@ export default class ViewPanel extends React.Component{
                             value={this.state.text}
                             onChange={this.onChangeText}
                             onKeyDown={this.onKeyDown}
+                            style={this.props.theme.container_3}
                         />
                     <Button
-                            bsStyle={this.state.isChange? "primary":"default"}
                             className={layout.btnOK}
+                            style={this.state.isChange? this.props.theme.container_4 : this.props.theme.container_3}
                             disabled={this.state.isSaving}
                             onClick={this.state.isSaving? null : this.onSaveClick}>
                         {this.state.isSaving? "SAVE..." : "SAVE"}

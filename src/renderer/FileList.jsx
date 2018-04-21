@@ -77,7 +77,8 @@ export default class FileList extends React.Component{
                     <ListItem
                         txtInfo={f}
                         selected={f.name === this.props.selectedFile}
-                        onClickItem={this.onClickFile.bind(this, f.name)}/>
+                        onClickItem={this.onClickFile.bind(this, f.name)}
+                        theme={this.props.theme}/>
                     )}
             </ListGroup>
         );

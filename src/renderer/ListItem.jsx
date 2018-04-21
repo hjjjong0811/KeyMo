@@ -2,7 +2,7 @@ import React from "react";
 import { ListGroupItem, Overlay, Tooltip } from "react-bootstrap";
 import ContextMenu from "./ContextMenu";
 import { ipcRenderer } from "electron";
-import style from "./css/ListItemStyle";
+import layout from "./css/ListItemStyle.css";
 
 export default class ListItem extends React.Component {
   constructor(props) {
@@ -101,7 +101,7 @@ export default class ListItem extends React.Component {
   renderRename(){
     return(
         <form onSubmit={this.renameFileSubmit}
-        style={this.props.selected? style.listItemSelected : style.listItem}>
+          style={this.props.selected? this.props.theme.container_2 : this.props.theme.container_3}>
           <input
             type="text"
             value={this.state.renameText}
@@ -127,11 +127,11 @@ export default class ListItem extends React.Component {
           id={this.props.txtInfo.name}
           onClick={this.props.onClickItem}
           ref={(target_form)=> this.target_form = target_form}
-          style={this.props.selected? style.listItemSelected : style.listItem}
+          style={this.props.selected? this.props.theme.container_2 : this.props.theme.container_3}
         >
           {this.state.isNaming ? this.renderRename() :
-             <h4 style={style.txtSubject}>{this.props.txtInfo.name}</h4>}
-          <h6 style={style.txtTags}>{this.toStringTag(this.props.txtInfo.tags)}</h6>
+             <h4 className={layout.txtSubject}>{this.props.txtInfo.name}</h4>}
+          <h6 className={layout.txtTags}>{this.toStringTag(this.props.txtInfo.tags)}</h6>
         </ListGroupItem>
         <ContextMenu
           ID={this.props.txtInfo.name}

@@ -36,17 +36,15 @@ export default class About extends React.Component {
                         <p>
                             <h1>KeyMo</h1>
                             v.1.0.0<br/>
-                            <a href="#">Repository</a>
+                            <a href="https://github.com/hjjjong0811/KeyMo">Repository</a>
                         </p>
                         <p>
                             <h3>OSS</h3>
-                            <ul>
-                                <li>Electron</li>
-                                <li>React</li>
-                                <li>React-bootstrap</li>
-                            </ul>
+                            <a href="https://electronjs.org/">Electron</a> / 
+                            <a href="https://reactjs.org/">React</a> / 
+                            <a href="https://react-bootstrap.github.io/">React-bootstrap</a>
                             <h3>ICON</h3>
-                            <ul>
+                            <ul style={{listStyleType: "none"}}>
                                 <li>designed by Those Icons from Flaticon</li>
                                 <li>designed by Gregor Cresnar from Flaticon</li>
                             </ul>

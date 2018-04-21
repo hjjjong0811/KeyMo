@@ -1,5 +1,5 @@
 import createFileManager from "./createFileManager";
-const {app, Menu, BrowserWindow, webContents, ipcMain} = require("electron");
+const {app, Menu, BrowserWindow, webContents, ipcMain, shell} = require("electron");
 const path = require("path");
 const url = require("url");
 
@@ -39,6 +39,10 @@ function createWindow(){
     win.loadURL('file://' + __dirname + '/../../index.html');
     win.on("closed", () => {
         win = null;
+    });
+    win.webContents.on("will-navigate", (e, url) => {
+        e.preventDefault();
+        shell.openExternal(url);
     });
 }
 function renameFile(nameCur, nameNew){

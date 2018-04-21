@@ -101,19 +101,21 @@ export default class NavPanel extends React.Component{
                     {/* Tab Button.. */}
                     <div>
                         <span
-                            className={this.state.activeTab === 1? layout.btnSimple_Selected : layout.btnSimple}
+                            className={layout.btnSimple}
+                            style={this.state.activeTab === 1? this.props.theme.button_bottomLine_selected : this.props.theme.button_bottomLine}
                             onClick={this.onClickTab.bind(this, 1)}>
                                 Files
                         </span>
                         <span
-                            className={this.state.activeTab === 2? layout.btnSimple_Selected : layout.btnSimple}
+                            className={layout.btnSimple}
+                            style={this.state.activeTab === 2? this.props.theme.button_bottomLine_selected : this.props.theme.button_bottomLine}
                             onClick={this.onClickTab.bind(this, 2)}>
                                 Tags
                         </span>
                     </div>
                     {/* Tab Contents */}
                     <div class={this.state.activeTab === 1?layout.tab_Active:layout.tab_Disable}>
-                        <FileList files={this.props.files} selectedFile={this.props.selectedFile}/>
+                        <FileList files={this.props.files} selectedFile={this.props.selectedFile} theme={this.props.theme}/>
                     </div>
                     <div class={this.state.activeTab === 2?layout.tab_Active:layout.tab_Disable}>
                         <div className={layout.prSize_scroll}>
