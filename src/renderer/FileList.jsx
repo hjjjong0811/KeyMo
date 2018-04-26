@@ -118,7 +118,7 @@ export default class FileList extends React.Component{
                             value={this.state.newFileName}
                             onChange={this.OnFileNameChange}/>
                         <InputGroup.Button>
-                            <Button type="submit" bsStyle="primary">
+                            <Button type="submit" style={this.props.theme.container_4}>
                                 Create
                             </Button>
                         </InputGroup.Button>
@@ -140,6 +140,7 @@ export default class FileList extends React.Component{
         return(
             <div className={style.verticalFlex}>
                 <Button
+                    style={this.props.theme.container_5}
                     onClick={this.CreateWin_Toggle}>
                         Create TextFile
                 </Button>

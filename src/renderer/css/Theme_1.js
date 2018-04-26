@@ -10,31 +10,37 @@ module.exports = {
 
 
     container_1:{   //toolbar?
-        backgroundColor:"#dbebe9"
+        backgroundColor:"#4788B8"
     },
     container_2:{   //ListItem
-        backgroundColor:"#99A6E3"
+        backgroundColor:"#DDDDDD",
+        color: "#1E1E1E"
     },
     container_3:{   //Generally Background
-        backgroundColor: "#FFFBFF"
+        backgroundColor: "#FFFFFF",
+        color: "#1E1E1E"
     },
     container_4:{   //Primary Button
-        backgroundColor: "#FF581A"
+        backgroundColor: "#FA832C",
+        color: "#FFFFFF"
+    },
+    container_5:{   //Create Button
+        backgroundColor: "#FFFFFF",
+        border: "none",
+        borderBottom: "1px solid #DDDDDD"
     },
     
 
 
     button_bottomLine_selected:{
-        backgroundColor: "#FFFBFF",
-        borderLeft: "thin solid gainsboro",
-        borderRight: "thin solid gainsboro",
-        borderBottom: "thick solid #dbebe9"
+        backgroundColor: "#FFFFFF",
+        borderRight: "thin solid #B5B5B5",
+        borderBottom: "thick solid #4788B8"
     },
     button_bottomLine:{
-        backgroundColor: "#FFFBFF",
-        borderLeft: "thin solid gainsboro",
-        borderRight: "thin solid gainsboro",
-        borderBottom: "thin solid gainsboro"
+        backgroundColor: "#FFFFFF",
+        borderRight: "thin solid #B5B5B5",
+        borderBottom: "thin solid #B5B5B5"
     }
 
 }
