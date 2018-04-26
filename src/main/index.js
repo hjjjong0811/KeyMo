@@ -1,5 +1,5 @@
 import createFileManager from "./createFileManager";
-const {app, Menu, BrowserWindow, webContents, ipcMain} = require("electron");
+const {app, Menu, BrowserWindow, webContents, ipcMain, shell} = require("electron");
 const path = require("path");
 const url = require("url");
 
@@ -7,20 +7,27 @@ let win;
 let fileManager;
 
 function openDirectory(){
-    const dirInfo = fileManager.openDir();
-    win.webContents.send("MR_OPENDIR", dirInfo);
+    const dirInfo = fileManager.openDir(win);
+    if(dirInfo != null) win.webContents.send("MR_OPENDIR", dirInfo);
 }
 function openFile(fileName){
     const fileData = fileManager.openFile(fileName);
-    win.webContents.send("MR_OPENFILE", fileData);
+    if(fileData == null){}
+    else{win.webContents.send("MR_OPENFILE", fileData);}
 }
 function saveFile(fileData){
     const filesInfo = fileManager.saveFile(fileData);
     win.webContents.send("MR_UPDATETAGS", filesInfo);
+    win.webContents.send("MR_SAVECOMPLETE");
 }
 function createFile(fileName){
     const filesInfo = fileManager.createFile(fileName);
-    win.webContents.send("MR_UPDATETAGS", filesInfo);
+    if(filesInfo == 0) win.webContents.send("MR_ISNEWCOMPLETE", 0);
+    else if(filesInfo == -1) win.webContents.send("MR_ISNEWCOMPLETE", -1);
+    else{
+        win.webContents.send("MR_UPDATETAGS", filesInfo);
+        win.webContents.send("MR_ISNEWCOMPLETE", 1);
+    }
 }
 function searchFile(searchText){
     const result = fileManager.searchFile(searchText);
@@ -33,6 +40,23 @@ function createWindow(){
     win.on("closed", () => {
         win = null;
     });
+    win.webContents.on("will-navigate", (e, url) => {
+        e.preventDefault();
+        shell.openExternal(url);
+    });
+}
+function renameFile(nameCur, nameNew){
+    const result = fileManager.renameFile(nameCur, nameNew);
+    if(result == 0 || result == -1) win.webContents.send("MR_ISRENAMECOMPLETE", result);
+    else{
+        win.webContents.send("MR_UPDATETAGS", result);
+        win.webContents.send("MR_ISRENAMECOMPLETE", 1);
+        win.webContents.send("MR_RENAMEFILE", nameCur, nameNew);
+    }
+}
+function deleteFile(fileName){
+    const filesInfo = fileManager.deleteFile(fileName);
+    win.webContents.send("MR_DELETEFILE", filesInfo);
 }
 
 function setAppMenu(){
@@ -72,7 +96,7 @@ function setAppMenu(){
         {
             label: "Help",
             submenu: [
-                {label: "Info"}
+                {label: "About", click: ()=>win.webContents.send("MR_MODAL_ABOUT")}
             ]
         }
     ];
@@ -98,6 +122,8 @@ app.on("ready", () =>{
     ipcMain.on("RM_SAVEFILE", (_e, fileData) => saveFile(fileData));
     ipcMain.on("RM_NEWFILE", (_e, fileName) => createFile(fileName));
     ipcMain.on("RM_SEARCHFILE", (_e, searchText) => searchFile(searchText));
+    ipcMain.on("RM_RENAMEFILE", (_e, nameCur, nameNew) => renameFile(nameCur, nameNew));
+    ipcMain.on("RM_DELETEFILE", (_e, fileName) => deleteFile(fileName));
 });
 
 app.on("window-all-closed", () =>{

@@ -7,3 +7,27 @@
     overflow: hidden;
 }
 
+.navPanel{
+    min-width: 400px;
+    max-width: 400px;
+    height: 100%;
+}
+
+.notOpenDir{
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+}
+.notOpenDirImg{
+    position: relative;
+    height: 128px;
+}
+.notOpenDirMsg{
+    position: relative;
+    display: inline-block;
+    top:calc(50% - 100px);
+    background-color: pink;
+}

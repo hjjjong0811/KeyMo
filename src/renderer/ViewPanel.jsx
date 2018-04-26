@@ -1,12 +1,15 @@
 import React from "react";
-import style from "./css/ViewPanel.css";
+import layout from "./css/ViewPanel.css";
 import {ipcRenderer} from "electron";
+import {Button} from "react-bootstrap";
 
 export default class ViewPanel extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            text:""
+            text:"",
+            isChange: false,
+            isSaving: false
         }
         this.onChangeText = this.onChangeText.bind(this);
         this.onSaveClick = this.onSaveClick.bind(this);
@@ -14,7 +17,11 @@ export default class ViewPanel extends React.Component{
     }
     componentDidMount(){
         ipcRenderer.on("MR_OPENFILE", (_e, fileData) => {
-            this.setState({text: fileData.text});
+            this.setState({
+                text: fileData.text,
+                isChange: false,
+                isSaving: false
+            });
         });
         ipcRenderer.on("MR_SAVEFILE", (_e) => {
             this.onSaveClick(null);
@@ -26,6 +33,10 @@ export default class ViewPanel extends React.Component{
 
     onChangeText(e){
         this.setState({text: e.target.value});
+        if(!this.state.isChange){
+            document.title += " *";
+            this.setState({isChange : true});
+        }
     }
     onKeyDown(e){
         if(e.keyCode === 9){
@@ -45,29 +56,52 @@ export default class ViewPanel extends React.Component{
         }else if(this.props.fileName === ""){
             console.log("File을 선택해주세요");
         }else{
+            this.setState({isSaving: true});
             ipcRenderer.send("RM_SAVEFILE", {
                 name:this.props.fileName,
                 text:this.state.text
+            });
+            ipcRenderer.once("MR_SAVECOMPLETE", (_e) => {
+                if(this.state.isChange) document.title = document.title.slice(0, -1);
+                this.setState({
+                    isSaving: false,
+                    isChange: false
+                });
             });
         }
     }
 
     render(){
         return(
-            <div className= {style.viewPanel}>
-                <textarea
-                        ref="memo"
-                        className={style.memo}
-                        value={this.state.text}
-                        onChange={this.onChangeText}
-                        onKeyDown={this.onKeyDown}
-                    />
-                <button type="button"
-                        className={style.btnOK}
-                        onClick={this.onSaveClick}>
-                    SAVE
-                </button>
-            </div>
+            this.props.fileName === ""?
+                <div className={layout.notOpenFile} style= {this.props.theme.empty_back}>
+                    <span className={layout.notOpenFileMsg} style={this.props.theme.empty_content}>
+                        <object
+                            type="image/svg+xml"
+                            data={require("./../images/keyword.svg")}
+                            className={layout.notOpenFileImg}
+                            style={this.props.theme.empty_content}
+                        />
+                    </span>
+                </div>
+                :
+                <div className= {layout.viewPanel}>
+                    <textarea
+                            ref="memo"
+                            className={layout.memo}
+                            value={this.state.text}
+                            onChange={this.onChangeText}
+                            onKeyDown={this.onKeyDown}
+                            style={this.props.theme.container_3}
+                        />
+                    <Button
+                            className={layout.btnOK}
+                            style={this.state.isChange? this.props.theme.container_4 : this.props.theme.container_3}
+                            disabled={this.state.isSaving}
+                            onClick={this.state.isSaving? null : this.onSaveClick}>
+                        {this.state.isSaving? "SAVE..." : "SAVE"}
+                    </Button>
+                </div>
         );
     }
 }

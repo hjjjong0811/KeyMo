@@ -1,6 +1,7 @@
 import React from "react";
 import {render} from "react-dom";
 import KeywordMemo from "./KeywordMemo";
+import About from "./About";
 
 var appStyle = {
     width: '100%',
@@ -10,5 +11,6 @@ var appStyle = {
 render(
     <div style={appStyle}>
         <KeywordMemo/>
+        <About/>
     </div>
     , document.getElementById("app"));
