@@ -17,9 +17,31 @@ export default class FileList extends React.Component{
             createTooltip: ""
         };
 
+        this.checkClick = this.checkClick.bind(this);
+        
         this.CreateWin_Toggle = this.CreateWin_Toggle.bind(this);
         this.OnFileNameChange = this.OnFileNameChange.bind(this);
         this.OnCreateWin_OKClick = this.OnCreateWin_OKClick.bind(this);
+    }
+
+    componentDidMount() {
+        document.addEventListener("contextmenu", this.checkClick);
+        document.addEventListener("click", this.checkClick);
+    }
+    componentWillUnmount() {
+        document.removeEventListener("contextmenu", this.checkClick);
+        document.removeEventListener("click", this.checkClick);
+    }
+
+    checkClick(e) {
+        if (this.state.isOpenCreate
+                && this.state.target != e.target
+                && !this.createForm.contains(e.target)) {
+            e.preventDefault();
+            this.setState({
+                isOpenCreate: false
+            });
+        }
     }
 
     // * CreateFile
@@ -86,6 +108,7 @@ export default class FileList extends React.Component{
     renderCreatePopup(){
         return(
             <Popover title='Create TextFile'>
+            <div ref={(createForm)=> this.createForm = createForm}>
                 <form onSubmit={this.OnCreateWin_OKClick}>
                     <InputGroup>
                         <FormControl
@@ -109,6 +132,7 @@ export default class FileList extends React.Component{
                     placement="top">
                     <Tooltip id="fileNametooltip">{this.state.createTooltip}</Tooltip>
                 </Overlay>
+            </div>
             </Popover>
         );
     }

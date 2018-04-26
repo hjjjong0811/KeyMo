@@ -95,7 +95,8 @@ export default class ListItem extends React.Component {
 
   // ** Delete
   onDelete(){
-    ipcRenderer.send("RM_DELETEFILE", this.props.txtInfo.name);
+    var flag = confirm("'" + this.props.txtInfo.name + "' 를 정말로 삭제합니까?");
+    if(flag) ipcRenderer.send("RM_DELETEFILE", this.props.txtInfo.name);
   }
 
   renderRename(){
